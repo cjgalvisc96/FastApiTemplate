@@ -4,5 +4,5 @@ Template to create MVC FastApi projects
 Create `Develop` branch
 
 ```sh
-poetry add black isort pytest coverage
+poetry add black isort pytest coverage fastapi uvicorn[standard] pydantic 
 ```
