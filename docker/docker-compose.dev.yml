@@ -1,0 +1,136 @@
+version: "3.8"
+
+services:
+  backend:
+    container_name: app_backend
+    build:
+      context: ..
+      dockerfile: docker/fastapi/dev.Dockerfile
+    image: app_backend
+    env_file: ../local.env
+    restart: always
+    volumes:
+      - ..:/app/
+    depends_on:
+      - db
+      - localstack
+    working_dir: "/app/backend"
+    expose:
+      - 8000
+      - 9500 # To expose debugger port
+    ports:
+      - "8000:8000"
+      - "9500:9500" # To expose debugger port
+    command: runserver_local
+    networks:
+      - app_network
+
+  db:
+    container_name: app_db
+    build:
+      context: ..
+      dockerfile: docker/db/dev.Dockerfile
+    image: app_db
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: unless-stopped
+    env_file: ../local.env
+    ports:
+      - "3306:3306"
+    networks:
+      - app_network
+
+  celery-worker:
+    container_name: app_celery_worker
+    build:
+      context: ..
+      dockerfile: docker/fastapi/dev.Dockerfile
+    image: app_backend
+    working_dir: /app/backend
+    env_file:
+      - ../local.env
+    volumes:
+      - ..:/app/
+    command: celery -A config worker  --autoscale=8,1 -P gevent -l INFO
+    restart: unless-stopped
+    depends_on:
+      - db
+      - localstack
+    networks:
+      - app_network
+
+  celery-beat:
+    container_name: app_celery_beat
+    build:
+      context: ..
+      dockerfile: docker/fastapi/dev.Dockerfile
+    image: app_backend
+    working_dir: /app/backend
+    env_file:
+      - ../local.env
+    volumes:
+      - ..:/app/
+    command: celery -A config beat  -l INFO
+    restart: unless-stopped
+    depends_on:
+      - db
+      - localstack
+    networks:
+      - app_network
+
+  localstack:
+    container_name: app_localstack 
+    image: localstack/localstack:2.1.0
+    ports:
+      - "127.0.0.1:4566:4566" # LocalStack Gateway
+    environment:
+      - SERVICES=s3,dynamodb,sqs,sns
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "${LOCALSTACK_VOLUME_DIR:-./localstack_data}:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - app_network
+ 
+  aws-cli:
+    container_name: app_aws_cli 
+    image: amazon/aws-cli:2.11.22
+    environment:
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=us-east-1
+    entrypoint: /bin/sh -c
+    command: >
+      "
+        # Create localstack user
+        aws configure set aws_access_key_id test --profile localstack
+        aws configure set aws_secret_access_key test --profile localstack
+        aws configure set region us-east-1 --profile localstack
+        # Setup S3
+        aws --endpoint-url http://localstack:4566 --profile localstack --region us-east-1 s3api create-bucket --bucket braghouse-files-test --acl public-read
+      "
+    depends_on:
+      - localstack
+    networks:
+      - app_network
+ 
+  smtp-server:
+    container_name: app_smtp_server_local
+    image: mailhog/mailhog:v1.0.1
+    expose:
+      - 1025
+      - 8025
+    ports:
+      - '1025:1025'
+      - '8025:8025'
+    networks:
+      - app_network
+
+volumes:
+  mysql_data:
+  localstack_data:
+
+networks:
+  app_network:

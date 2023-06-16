@@ -1,0 +1,59 @@
+[tool.poetry]
+name = "fastapitemplate"
+version = "0.1.0"
+description = "FastApiTemplate"
+authors = ["Cristian Galvis <cjgalvisc@unal.edu.co>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"
+sections = "FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
+# add here the apps
+# known_first_party = "app1_name,app2_name"
+skip = ["__init__.py"]
+skip_glob = ["backend/config/celery.py"]
+length_sort=true
+use_parentheses = true
+reverse_relative = true
+include_trailing_comma = true
+force_sort_within_sections = true
+order_by_type = false
+line_length = 100
+multi_line_output = 3
+lines_between_types = 1
+
+[tool.black]
+target-version = ["py310"]
+skip-string-normalization = true
+line-length = 100
+include = '\.pyi?$'
+exclude = '''/(.*/__init__.py)/'''
+
+[tool.coverage.run]
+include=["../backend/*"]
+omit=["../backend/tests/*", "../backend/config/*"]
+
+[tool.coverage.report]
+include=["../backend/*"]
+omit=["../backend/tests/*", "../backend/config/*"]
+sort="Cover"
+precision=2
+show_missing=false
+skip_empty=true
+skip_covered=true
+fail_under=90
+
+[tool.pytest.ini_options]
+markers=[
+    "unit: Unit tests",
+    "integration: Integration tests",
+]
