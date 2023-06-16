@@ -38,3 +38,27 @@ poetry add black isort pytest coverage fastapi uvicorn[standard] pydantic
 ```sh
     [root_directory] make down 
 ```
+
+# TODO:
+
+Finish this use cases:
+    As an administrator I want to create auctions so that bidders can place bids on them.
+    As a bidder I want to place a bid so that I can win the auction
+    As a bidder I want to recieve e-mail notification when my bid is a winning one.
+    As an administrator I want to withdraw bids so that a malicious bidder does not win as auction.
+
+Missing:
+    Logging setup and include in services.
+    Inject Repository in services and selectors.
+    Add and inject Dtos in services and selectors.
+    Add and inject Presenters services and selectors.
+    Dependency container setup.
+    Finish app urls.py
+
+    USE BDD in integration tests.
+    Use Factory pattern in tests.
+
+    FastApi swagger docs.
+    Celery Setup.
+    Create "curl" commands to add in documentation.
+    Add authentification jwt after to finish.
