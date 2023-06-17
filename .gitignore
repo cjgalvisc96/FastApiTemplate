@@ -197,3 +197,4 @@ pyrightconfig.json
 # owner
 .python-version
 .vscode
+local.env

@@ -1,16 +1,12 @@
 from datetime import datetime
-
+from fastapi import status, Depends, APIRouter
 from pydantic import BaseModel
 from dependency_injector.wiring import inject, Provide
 
 from backend.shared import GeneralAPIException
-from backend.auctions.unit_of_work import AuctionsUnitOfWork
-from backend.auctions import CreateAuctionDto, AuctionsContainer
+from backend.auctions import CreateAuctionDto, CreateAuctionService
+from backend.container import ApplicationContainer
 
-uow = AuctionsUnitOfWork()
-
-
-from fastapi import status, Depends, APIRouter
 
 router = APIRouter(prefix="", tags=["CreateAuctions"])
 
@@ -27,10 +23,13 @@ class AuctionPostValidator(BaseModel):
 async def create_auction(
     product_id: int,
     auction: AuctionPostValidator,
-    create_auctions_service: Depends(Provide[AuctionsContainer.create_auction_service]),
+    create_auctions_service: CreateAuctionService = Depends(Provide[ApplicationContainer.create_auction_service]),
 ):
     input_dto = CreateAuctionDto(id=product_id, **auction)
     try:
         create_auctions_service(input_dto=input_dto)
     except Exception as error:
         raise GeneralAPIException(code="test", message=error)
+
+container = ApplicationContainer()
+container.wire(modules=[__name__])

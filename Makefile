@@ -32,3 +32,9 @@ coverage:
 # install_from_sractch:
 
 # onboard:
+
+.PHONY: prune
+prune: down
+	-yes | docker system prune -a
+	-yes | docker volume rm $$(docker volume ls -q)
+

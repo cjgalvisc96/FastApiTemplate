@@ -16,7 +16,7 @@ class AuctionsUnitOfWork(IUnitOfWork):
 
     def __enter__(self) -> Self:
         self._session = self._session_factory()
-        self.repository(self._session)
+        self.repository(session=self._session)
         return self
 
     def __exit__(self, *args) -> None:

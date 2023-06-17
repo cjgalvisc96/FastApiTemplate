@@ -1,14 +1,13 @@
-from backend.auctions import Auction
-from backend.shared import IUnitOfWork
-from backend.auctions.unit_of_work import AuctionsUnitOfWork
+from backend.shared import ILogger, IUnitOfWork
 
-uow = AuctionsUnitOfWork()
+class GetAuctionService:
+    def __init__(self, *, uow: IUnitOfWork, logger: ILogger) -> None:
+        self._uow = uow
+        self._logger = logger
 
+    def execute(self) -> None:
+        with self._uow:
+            getted = self._uow.repository.get()
 
-def get_all_auctions(*, uow: IUnitOfWork, presenter: None) -> list[Auction]:
-    with uow:
-        auctions = uow.auctions.get_all()
-    return presenter(auctions)
-
-
-auctions = get_all_auctions(uow=uow)
+        self._logger.info(msg="Get Auction")
+        return getted

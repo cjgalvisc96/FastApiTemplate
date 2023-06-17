@@ -1,21 +1,6 @@
 import logging
-
-logging.basicConfig(
-    name="BackendLogger",
-    filename="logs.txt",
-    filemode="a",
-    level=logging.INFO,
-    format="%(asctime)s | %(name)s | %(levelname)s | %(message)s",
-    datefmt="%d-%b-%y %H:%M:%S",
-)
-logger = logging.getLogger()
-
-import logging
-
-from src.contexts.shared.domain import Logger
-
-
-class LoggingLogger(Logger):
+from backend.shared import ILogger
+class LoggingLogger(ILogger):
     def __init__(
         self,
         *,
@@ -29,9 +14,9 @@ class LoggingLogger(Logger):
         logging.basicConfig(
             filename=filename,
             filemode=filemode,
+            level=self._get_level(level=level),
             format=format_,
             datefmt=date_format,
-            level=self._get_level(level=level),
         )
         self.logger = logging.getLogger(name=name)
 
@@ -51,13 +36,3 @@ class LoggingLogger(Logger):
 
     def info(self, *, message: str):
         self.logger.info(message)
-
-
-logger = LoggingLogger(
-    name="BackendLogger",
-    filename="logs.txt",
-    filemode="a",
-    level=logging.INFO,
-    format="%(asctime)s | %(name)s | %(levelname)s | %(message)s",
-    datefmt="%d-%b-%y %H:%M:%S",
-)
