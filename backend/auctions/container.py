@@ -3,7 +3,7 @@ from logging import INFO
 from dependency_injector import providers, containers
 
 from backend.shared import LoggingLogger, _default_session_factory
-from backend.auctions import AuctionsRepository, AuctionsUnitOfWork, create_auction_service
+from backend.auctions import AuctionsRepository, AuctionsUnitOfWork, CreateAuctionService
 
 
 class AuctionsContainer(containers.DeclarativeContainer):
@@ -22,5 +22,5 @@ class AuctionsContainer(containers.DeclarativeContainer):
     )
 
     create_auction_service = providers.Factory(
-        create_auction_service, uow=auctions_uow, logger=logger
+        CreateAuctionService, uow=auctions_uow, logger=logger
     )
