@@ -1,5 +1,8 @@
 import logging
+
 from backend.shared import ILogger
+
+
 class LoggingLogger(ILogger):
     def __init__(
         self,

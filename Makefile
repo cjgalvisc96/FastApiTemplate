@@ -2,7 +2,8 @@ SHELL = /bin/sh
 DEVELOP_COMPOSE_FILE_PATH = "./docker/docker-compose.dev.yml"
 
 # 🐳 Docker Compose
-up: CMD=up -d
+# up: CMD=up -d
+up: CMD=up
 down: CMD=down
 sh: CMD=exec backend sh
 logs: CMD=logs -f backend
@@ -33,8 +34,12 @@ coverage:
 
 # onboard:
 
+.PHONY: reboot
+reboot: down
+	-yes | docker image rm app_backend
+	make up
+
 .PHONY: prune
 prune: down
 	-yes | docker system prune -a
 	-yes | docker volume rm $$(docker volume ls -q)
-

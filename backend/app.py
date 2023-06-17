@@ -1,5 +1,4 @@
 import debugpy
-
 from fastapi.responses import JSONResponse
 from fastapi import status, FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
@@ -15,9 +14,19 @@ def attach_debug():
     debugpy.listen((debug_host, debug_port))
     print(f'DEBUG Attached!, running in: {debug_host}:{debug_port}')
 
+
+def attach_test_debug_waiting_connection():
+    debug_host = "0.0.0.0"
+    debug_port = 9500
+    debugpy.listen((debug_host, debug_port))
+    print("Waiting for DEBUG attaching")
+    debugpy.wait_for_client()
+    print(f'DEBUG Attached!, running in: {debug_host}:{debug_port}')
+
+
 def add_routers(*, app: FastAPI, routers: list[APIRouter]) -> None:
     for router in routers:
-        app.include_router(router=router, prefix="V1", tags=["application"])
+        app.include_router(router=router, prefix="/v1", tags=["application"])
 
 
 def add_middleware(*, app: FastAPI) -> None:
@@ -47,9 +56,13 @@ def add_dependency_injection(*, app: FastAPI, container: object) -> None:
 
 
 def create_app() -> FastAPI:
+    # attach_test_debug_waiting_connection()
+    container = ApplicationContainer()
+    db = container.database()
+    db.create_database()
+
     attach_debug()
     app = FastAPI()
-    container = ApplicationContainer()
 
     add_dependency_injection(app=app, container=container)
     add_routers(app=app, routers=[auctions_router])

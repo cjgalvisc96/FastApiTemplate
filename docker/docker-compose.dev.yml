@@ -2,12 +2,11 @@ version: "3.8"
 
 services:
   backend:
+    image: app_backend
     container_name: app_backend
     build:
-      # context: ..
       context: ${PWD}
       dockerfile: docker/fastapi/dev.Dockerfile
-    # image: app_backend
     env_file: ../local.env
     restart: always
     volumes:
@@ -15,24 +14,22 @@ services:
     depends_on:
       - db
       # - localstack
-    # working_dir: "/app/backend"
     expose:
       - 8000
       - 9500 # To expose debugger port
     ports:
       - "8000:8000"
       - "9500:9500" # To expose debugger port
-    # command: runserver_local
-    command: "uvicorn backend.app:app --host 0.0.0.0 --reload --port 8000"
+    command: runserver_local
     networks:
       - app_network
 
   db:
+    image: app_db
     container_name: app_db
     build:
       context: ..
       dockerfile: docker/db/dev.Dockerfile
-    image: app_db
     volumes:
       - mysql_data:/var/lib/mysql
     restart: unless-stopped

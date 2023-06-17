@@ -6,7 +6,7 @@ set -o errexit
 set -o nounset
 
 function start_runserver_local() {
-  cd /app/backend/
+  cd /app/
   uvicorn backend.app:app --host 0.0.0.0 --reload --port 8000
 }
 

@@ -33,4 +33,4 @@ RUN chmod a+x /docker-entrypoint.sh
 RUN mkdir /app/backend
 COPY ./backend /app/backend/
 
-# ENTRYPOINT ["sh", "/docker-entrypoint.sh"]
+ENTRYPOINT ["sh", "/docker-entrypoint.sh"]

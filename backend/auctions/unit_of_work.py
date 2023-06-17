@@ -8,15 +8,13 @@ from backend.shared import IUnitOfWork, IGenericRepository
 class AuctionsUnitOfWork(IUnitOfWork):
     def __init__(
         self,
-        session_factory: sessionmaker,
         repository: IGenericRepository,
     ) -> None:
-        self._session_factory = session_factory
         self.repository = repository
+        self._session = None
 
     def __enter__(self) -> Self:
-        self._session = self._session_factory()
-        self.repository(session=self._session)
+        self._session = self.repository.session_factory()
         return self
 
     def __exit__(self, *args) -> None:

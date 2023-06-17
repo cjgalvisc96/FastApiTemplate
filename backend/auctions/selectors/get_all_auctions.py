@@ -1,5 +1,6 @@
 from backend.shared import ILogger, IUnitOfWork
 
+
 class GetAuctionService:
     def __init__(self, *, uow: IUnitOfWork, logger: ILogger) -> None:
         self._uow = uow

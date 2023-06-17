@@ -1,11 +1,22 @@
-from datetime import datetime
-from dataclasses import dataclass
+from sqlalchemy import Column, String, Integer, DateTime
+
+from backend.shared import Base
 
 
-@dataclass
-class Auction:
-    id: int
-    title: str
-    starting_price: int  # Cents
-    bids: list[int]
-    ends_at: datetime
+class Auction(Base):
+    __tablename__ = "auctions"
+
+    id: Column(Integer, primary_key=True)
+    title: Column(String)
+    starting_price: Column(Integer)  # Cents
+    bids: Column(String)
+    ends_at: Column(DateTime)
+
+    def __repr__(self):
+        return (
+            f"<Auction(id={self.id}, "
+            f"title=\"{self.title}\", "
+            f"starting_price=\"{self.starting_price}\", "
+            f"bids=\"{self.bids}\", "
+            f"ends_at={self.ends_at})>"
+        )

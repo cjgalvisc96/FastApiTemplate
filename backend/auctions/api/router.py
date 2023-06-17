@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from backend.auctions.api.create_auction import router as create_auction_router
+from backend.auctions.api.create_auction import create_auction_router
 
 auctions_router = APIRouter(prefix="/auctions", tags=["Auctions"])
 
