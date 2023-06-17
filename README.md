@@ -48,7 +48,6 @@ Finish this use cases:
     As an administrator I want to withdraw bids so that a malicious bidder does not win as auction.
 
 Missing:
-    Logging setup and include in services.
     Inject Repository in services and selectors.
     Add and inject Dtos in services and selectors.
     Add and inject Presenters services and selectors.

@@ -1,20 +1,15 @@
-from fastapi import FastAPI, status
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from fever_events.constants import APPLICATION_API
-from fever_events.container import Container
-from fever_events.infrastructure.application_api.api_v1.events import (
-    router as events_router,
-)
-from fever_events.infrastructure.application_api.api_v1.exceptions import (
-    GeneralAPIException,
-)
+from fastapi import status, FastAPI, APIRouter
+from fastapi.middleware.cors import CORSMiddleware
+
+from backend.shared import GeneralAPIException
+from backend.container import ApplicationContainer
+from backend.auctions.api.router import auctions_router
 
 
-def add_routers(*, app: FastAPI) -> None:
-    app.include_router(
-        router=events_router, prefix=APPLICATION_API["API_VERSION_PREFIX"]
-    )
+def add_routers(*, app: FastAPI, routers: list[APIRouter]) -> None:
+    for router in routers:
+        app.include_router(router=router, prefix="V1", tags=["application"])
 
 
 def add_middleware(*, app: FastAPI) -> None:
@@ -45,10 +40,10 @@ def add_dependency_injection(*, app: FastAPI, container: object) -> None:
 
 def create_app() -> FastAPI:
     app = FastAPI()
-    container = Container()
+    container = ApplicationContainer()
 
     add_dependency_injection(app=app, container=container)
-    add_routers(app=app)
+    add_routers(app=app, routers=[auctions_router])
     add_middleware(app=app)
     add_handle_exceptions(app=app)
     return app

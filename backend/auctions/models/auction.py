@@ -6,6 +6,6 @@ from dataclasses import dataclass
 class Auction:
     id: int
     title: str
-    starting_price: float
+    starting_price: int  # Cents
     bids: list[int]
     ends_at: datetime

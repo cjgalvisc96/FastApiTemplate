@@ -5,7 +5,6 @@ T = TypeVar('T')
 
 
 class IGenericRepository(ABC, Generic[T]):
-
     @abstractmethod
     def add(self, entity: T) -> None:
         ...

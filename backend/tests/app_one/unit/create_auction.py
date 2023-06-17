@@ -1,7 +1,6 @@
+from backend.auctions import create_auction
 from backend.shared import IUnitOfWork, IGenericRepository
-from backend.auctions import (
-    create_auction
-)
+
 
 class FakeRepository(IGenericRepository):
     def __init__(self, *, auctions):
