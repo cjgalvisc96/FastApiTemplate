@@ -11,13 +11,13 @@ class AuctionsUnitOfWork(IUnitOfWork):
         repository: IGenericRepository,
     ) -> None:
         self.repository = repository
-        self._session = None
 
     def __enter__(self) -> Self:
         self._session = self.repository.session_factory()
         return self
 
     def __exit__(self, *args) -> None:
+        # self.rollback()
         self._session.rollback()
         self._session.close()
 

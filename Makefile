@@ -5,10 +5,11 @@ DEVELOP_COMPOSE_FILE_PATH = "./docker/docker-compose.dev.yml"
 # up: CMD=up -d
 up: CMD=up
 down: CMD=down
-sh: CMD=exec backend sh
+backend_sh: CMD=exec backend sh
+db_sh: CMD=exec db mysql -u root --password=root auctions 
 logs: CMD=logs -f backend
 
-up down sh logs:
+up down sh backend_sh db_sh logs:
 	docker-compose -f $(DEVELOP_COMPOSE_FILE_PATH) $(CMD)
 
 .PHONY: linter_apply
@@ -43,3 +44,4 @@ reboot: down
 prune: down
 	-yes | docker system prune -a
 	-yes | docker volume rm $$(docker volume ls -q)
+	make up

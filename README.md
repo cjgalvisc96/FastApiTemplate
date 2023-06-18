@@ -29,9 +29,12 @@ poetry add black isort pytest coverage fastapi uvicorn[standard] pydantic
     [root_directory] make logs
 ```
 
-## How to enter in the app container?
+## How to enter in the app containers?
 ```sh
-    [root_directory] make sh
+    [root_directory] make backend_sh
+```
+```sh
+    [root_directory] make db_sh
 ```
 
 ## How to down the app?
@@ -48,12 +51,7 @@ Finish this use cases:
     As an administrator I want to withdraw bids so that a malicious bidder does not win as auction.
 
 Missing:
-    Inject Repository in services and selectors.
-    Add and inject Dtos in services and selectors.
-    Add and inject Presenters services and selectors.
-    Dependency container setup.
-    Finish app urls.py
-
+    Finish app uow.
     USE BDD in integration tests.
     Use Factory pattern in tests.
 
@@ -61,3 +59,6 @@ Missing:
     Celery Setup.
     Create "curl" commands to add in documentation.
     Add authentification jwt after to finish.
+
+DDD Version:
+    Add and inject Presenters services and selectors.

@@ -11,5 +11,4 @@ class Auction(Base):
     id = Column(Integer(), primary_key=True)
     title = Column(String(20))
     starting_price = Column(Integer())  # Cents
-    bids = Column(String(20))
     ends_at = Column(DateTime())

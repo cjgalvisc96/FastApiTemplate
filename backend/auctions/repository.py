@@ -11,25 +11,28 @@ class AuctionsRepository(IGenericRepository):
     def __init__(self, session_factory: Callable[..., AbstractContextManager[Session]]) -> None:
         self.session_factory = session_factory
 
-    def add(self, *, entity) -> Auction:
+    def add(self, *, auction: Auction) -> Auction:
         with self.session_factory() as session:
-            auction = self.session.add(entity)
+            auction = session.add(auction)
             return auction
 
     def get_all(self) -> Iterator[Auction]:
         with self.session_factory() as session:
             return session.query(Auction).all()
 
-    def get_by_id(self, auction_id: int) -> Auction:
+    def get_by_id(self, id: int) -> Auction:
         with self.session_factory() as session:
             auction = session.get(Auction, id)
             if not auction:
-                raise NotFoundError(auction_id)
+                raise NotFoundError(id)
             return auction
 
-    def delete_by_id(self, auction_id: int) -> None:
+    def update_by_id(self, id: int) -> Auction:
+        ...
+
+    def remove_by_id(self, id: int) -> None:
         with self.session_factory() as session:
-            auction = self.get_by_id(auction_id=auction_id)
+            auction = self.get_by_id(auction_id=id)
             session.delete(auction)
             session.commit()
 
