@@ -1,9 +1,10 @@
 from typing import Callable, Iterator
 from contextlib import AbstractContextManager
+
 from sqlalchemy.orm.session import Session
 
-from backend.auctions.models.auction import Auction
 from backend.shared import IGenericRepository
+from backend.auctions.models.auction import Auction
 
 
 class AuctionsRepository(IGenericRepository):
@@ -12,10 +13,8 @@ class AuctionsRepository(IGenericRepository):
 
     def add(self, *, entity) -> Auction:
         with self.session_factory() as session:
-            session.add(entity)
-            session.commit()
-            session.refresh(entity)
-            return entity
+            auction = self.session.add(entity)
+            return auction
 
     def get_all(self) -> Iterator[Auction]:
         with self.session_factory() as session:
@@ -23,17 +22,15 @@ class AuctionsRepository(IGenericRepository):
 
     def get_by_id(self, auction_id: int) -> Auction:
         with self.session_factory() as session:
-            auction = session.query(Auction).filter(Auction.id == auction_id).first()
+            auction = session.get(Auction, id)
             if not auction:
                 raise NotFoundError(auction_id)
             return auction
 
     def delete_by_id(self, auction_id: int) -> None:
         with self.session_factory() as session:
-            entity: Auction = session.query(Auction).filter(Auction.id == auction_id).first()
-            if not entity:
-                raise NotFoundError(auction_id)
-            session.delete(entity)
+            auction = self.get_by_id(auction_id=auction_id)
+            session.delete(auction)
             session.commit()
 
 

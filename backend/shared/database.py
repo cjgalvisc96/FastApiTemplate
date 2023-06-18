@@ -10,11 +10,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 # logger = logging.getLogger(__name__)
 
-class Base:
-    __allow_unmapped__ = True
-
-
-Base = declarative_base(cls=Base)
+Base = declarative_base()
 
 
 class Database:

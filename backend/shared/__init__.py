@@ -5,7 +5,7 @@ __all__ = [
     "ILogger",
     "LoggingLogger",
     "Base",
-    "Database"
+    "Database",
 ]
 
 from backend.shared.interfaces.repository import IGenericRepository
