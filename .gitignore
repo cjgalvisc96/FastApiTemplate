@@ -200,3 +200,4 @@ pyrightconfig.json
 local.env
 dev.env
 logs.txt
+docker/localstack_data

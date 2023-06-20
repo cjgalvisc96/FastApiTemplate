@@ -7,6 +7,17 @@ ENV_FILE = "dev.env"
 CASE_SENSITIVE = True
 
 
+class CelerySettings(BaseSettings):
+    CELERY_BROKER_URL: str
+    CELERY_RESULT_BACKEND: str
+    CELERY_BROKER_TRANSPORT: str = "sqs"
+    result_expires: int = 60 * 60 * 24  # 1 day
+
+    class Config:
+        case_sensitive = CASE_SENSITIVE
+        env_file = ENV_FILE
+
+
 class LoggerSettings(BaseSettings):
     NAME: str = "BackendLogger"
     FILENMAE: str = "logs.txt"
@@ -27,6 +38,7 @@ class AuctionsSettings(BaseSettings):
 class Settings(BaseSettings):
     logger = LoggerSettings()
     auctions = AuctionsSettings()
+    celery = CelerySettings()
 
     class Config:
         case_sensitive = CASE_SENSITIVE

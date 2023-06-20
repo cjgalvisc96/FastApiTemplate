@@ -51,12 +51,8 @@ Finish this use cases:
     As an administrator I want to withdraw bids so that a malicious bidder does not win as auction.
 
 Missing:
-    Celery Setup.
-
     USE BDD in integration tests.
     Use Factory pattern in tests.
-    Create "curl" commands to add in documentation.
-
 
 DDD Version:
     Add and inject Presenters services and selectors.
