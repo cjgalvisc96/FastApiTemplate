@@ -198,4 +198,5 @@ pyrightconfig.json
 .python-version
 .vscode
 local.env
+dev.env
 logs.txt
