@@ -7,33 +7,22 @@ from backend.auctions import AuctionsRepository, CreateAuctionService
 
 
 class ApplicationContainer(containers.DeclarativeContainer):
-    # config = providers.Configuration(json_files=["./container_config.json"])
+    config = providers.Configuration(json_files=["container_config.json"])
     wiring_config = containers.WiringConfiguration(packages=[".auctions"])
     # General
-    # logger = providers.Singleton(
-    #     LoggingLogger,
-    #     name=config.logger.name(),
-    #     filename=config.logger.filename(),
-    #     filemode=config.logger.filemode(),
-    #     level=INFO,
-    #     format_=config.logger.format_(),
-    #     date_format=config.logger.date_format(),
-    # )
-
     logger = providers.Singleton(
         LoggingLogger,
-        name="BackendLogger",
-        filename="logs.txt",
-        filemode="a",
+        name=config.logger.name,
+        filename=config.logger.filename,
+        filemode=config.logger.filemode,
         level=INFO,
-        format_="%(asctime)s | %(name)s | %(levelname)s | %(message)s",
-        date_format="%d-%b-%y %H:%M:%S",
+        format_=config.logger.format_,
+        date_format=config.logger.date_format,
     )
+
     # Auctions
     auctions_repository = providers.Singleton(
-        # AuctionsRepository, db_url=config.auctions_repository.db_url()
-        AuctionsRepository,
-        db_url="mysql://user:password@db:3306/auctions",
+        AuctionsRepository, db_url=config.auctions_repository.db_url
     )
 
     create_auction_service = providers.Factory(

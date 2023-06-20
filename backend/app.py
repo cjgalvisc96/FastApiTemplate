@@ -59,8 +59,10 @@ def add_dependency_injection(*, app: FastAPI, container: object) -> None:
 def setup_di_container() -> DeclarativeContainer:
     container = ApplicationContainer()
     container.check_dependencies()
+
     db = container.auctions_repository()
     db.create_database()
+
     return container
 
 

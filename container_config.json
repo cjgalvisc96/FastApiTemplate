@@ -3,7 +3,7 @@
         "name": "BackendLogger",
         "filename": "logs.txt",
         "filemode": "a",
-        "format": "%(asctime)s | %(name)s | %(levelname)s | %(message)s",
+        "format_": "%(asctime)s | %(name)s | %(levelname)s | %(message)s",
         "date_format": "%d-%b-%y %H:%M:%S"
     },
     "auctions_repository": {
