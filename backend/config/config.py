@@ -1,7 +1,7 @@
 from logging import INFO
 from functools import lru_cache
 
-from pydantic import BaseSettings
+from pydantic import Field, BaseSettings
 
 ENV_FILE = "dev.env"
 CASE_SENSITIVE = True
@@ -9,7 +9,10 @@ CASE_SENSITIVE = True
 
 class CelerySettings(BaseSettings):
     CELERY_BROKER_URL: str
-    CELERY_RESULT_BACKEND: str
+    result_backend: str = Field(env="CELERY_RESULT_BACKEND")
+    imports: list[str] = [
+        "backend.auctions.tasks",
+    ]
     CELERY_BROKER_TRANSPORT: str = "sqs"
     result_expires: int = 60 * 60 * 24  # 1 day
 

@@ -6,3 +6,4 @@ def send_email():
     print("*" * 10)
     print("Email sent")
     print("*" * 10)
+    return

@@ -12,8 +12,8 @@ services:
     volumes:
       - ..:/app/
     depends_on:
-      - db
-      - localstack
+      db:
+        condition: service_healthy
     expose:
       - 8000
       - 9500 # To expose debugger port
@@ -59,12 +59,12 @@ services:
     volumes:
       - ..:/app/
     command: celery -A backend.config.celery.app_celery worker --autoscale=8,1 -P gevent -l INFO
-    # command: celery -A config.celery.app_celery worker  --autoscale=8,1 -P gevent -l INFO --logfile=celery.log
+    # command: celery -A backend.config.celery.app_celery worker --autoscale=8,1 -P gevent -l DEBUG
     restart: unless-stopped
-    links:
-      - localstack
     depends_on:
+      - backend
       - redis
+      - localstack
     networks:
       - app_network
   
@@ -73,11 +73,8 @@ services:
     container_name: app_redis
     ports:
       - '6379:6379'
-    healthcheck:
-      test: "CMD redis-cli ping | grep PONG"
-      interval: 1s
-      timeout: 3s
-      retries: 5
+    networks:
+      - app_network
 
   celery-beat:
     image: app_celery_beat
@@ -90,6 +87,7 @@ services:
     volumes:
       - ..:/app/
     command: celery -A backend.config.celery.app_celery beat  -l INFO
+    # command: celery -A backend.config.celery.app_celery beat  -l DEBUG
     restart: unless-stopped
     depends_on:
       - celery-worker

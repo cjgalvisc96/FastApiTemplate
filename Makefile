@@ -42,6 +42,8 @@ reboot: down
 
 .PHONY: prune
 prune: down
+	sudo rm -rf docker/localstack_data
+	-sudo rm celerybeat-schedule
 	-yes | docker system prune -a
 	-yes | docker volume rm $$(docker volume ls -q)
 	make up
