@@ -1,7 +1,8 @@
 from datetime import datetime
 from dataclasses import dataclass
+
 from backend.auctions.models.auction import Auction
-from backend.shared import ILogger, IUnitOfWork
+from backend.shared import ILogger, IGenericRepository
 
 
 @dataclass(frozen=True)
@@ -13,20 +14,19 @@ class CreateAuctionDto:
 
 
 class CreateAuctionService:
-    def __init__(self, *, uow: IUnitOfWork, logger: ILogger) -> None:
-        self._uow = uow
+    def __init__(self, *, repository: IGenericRepository, logger: ILogger) -> None:
+        self._repository = repository
         self._logger = logger
 
     def execute(self, *, input_dto: CreateAuctionDto) -> None:
-        with self._uow:
-            auction = Auction(
-                id=input_dto.id,
-                title=input_dto.title,
-                starting_price=input_dto.starting_price,
-                ends_at=input_dto.ends_at,
-            )
-            added = self._uow.repository.add(auction=auction)
-            # self._uow.commit()
+        auction = Auction(
+            id=input_dto.id,
+            title=input_dto.title,
+            starting_price=input_dto.starting_price,
+            ends_at=input_dto.ends_at,
+        )
 
+        added = self._repository.add(auction=auction)
         self._logger.info(msg="Auction created")
+
         return added

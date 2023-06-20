@@ -1,12 +1,11 @@
-from datetime import datetime
-
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, String, Integer, DateTime
 
-from backend.shared import Base
+Base = declarative_base()
 
 
 class Auction(Base):
-    __tablename__ = "auctions"
+    __tablename__ = "auction"
 
     id = Column(Integer(), primary_key=True)
     title = Column(String(20))

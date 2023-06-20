@@ -2,6 +2,7 @@ import debugpy
 from fastapi.responses import JSONResponse
 from fastapi import status, FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
+from dependency_injector.containers import DeclarativeContainer
 
 from backend.shared import GeneralAPIException
 from backend.container import ApplicationContainer
@@ -55,15 +56,21 @@ def add_dependency_injection(*, app: FastAPI, container: object) -> None:
     app.container = container
 
 
+def setup_di_container() -> DeclarativeContainer:
+    container = ApplicationContainer()
+    container.check_dependencies()
+    db = container.auctions_repository()
+    db.create_database()
+    return container
+
+
 def create_app() -> FastAPI:
     # attach_test_debug_waiting_connection()
-    container = ApplicationContainer()
-    db = container.database()
-    db.create_database()
+    # attach_debug()
 
-    attach_debug()
+    container = setup_di_container()
+
     app = FastAPI()
-
     add_dependency_injection(app=app, container=container)
     add_routers(app=app, routers=[auctions_router])
     add_middleware(app=app)

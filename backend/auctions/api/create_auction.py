@@ -6,10 +6,8 @@ from fastapi import status, Depends, APIRouter
 from dependency_injector.wiring import inject, Provide
 
 from backend.shared import GeneralAPIException
-from backend.auctions import CreateAuctionDto, CreateAuctionService
-
 from backend.container import ApplicationContainer
-
+from backend.auctions import CreateAuctionDto, CreateAuctionService
 
 create_auction_router = APIRouter(tags=["CreateAuctions"])
 
