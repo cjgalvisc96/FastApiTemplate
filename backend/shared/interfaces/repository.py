@@ -14,10 +14,6 @@ class NotFoundError(Exception):
 
 class IGenericRepository(ABC, Generic[T]):
     @abstractmethod
-    def create_database(self) -> None:
-        ...
-
-    @abstractmethod
     def add(self, entity: T) -> None:
         ...
 

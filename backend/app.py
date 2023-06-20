@@ -5,23 +5,27 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from backend.shared import GeneralAPIException
 from backend.container import ApplicationContainer
-from backend.auctions.api.router import auctions_router
+from backend.auctions.api.endpoints import auctions_router
+
+container = ApplicationContainer()
+container.check_dependencies()
+logger = container.logging_logger()
 
 
 def attach_debug():
     debug_host = "0.0.0.0"
     debug_port = 9500
     debugpy.listen((debug_host, debug_port))
-    print(f'DEBUG Attached!, running in: {debug_host}:{debug_port}')
+    logger.info(message=f'DEBUG Attached!, running in: {debug_host}:{debug_port}')
 
 
 def attach_test_debug_waiting_connection():
     debug_host = "0.0.0.0"
     debug_port = 9500
     debugpy.listen((debug_host, debug_port))
-    print("Waiting for DEBUG attaching")
+    logger.info(message='Waiting for DEBUG attaching')
     debugpy.wait_for_client()
-    print(f'DEBUG Attached!, running in: {debug_host}:{debug_port}')
+    logger.info(message=f'DEBUG Attached!, running in: {debug_host}:{debug_port}')
 
 
 def add_routers(*, app: FastAPI, routers: list[APIRouter]) -> None:
@@ -55,25 +59,41 @@ def add_dependency_injection(*, app: FastAPI, container: object) -> None:
     app.container = container
 
 
-def add_startup_events(app, databases_to_init):
+def add_startup_events(app, databases_to_init, caches_to_init):
     @app.on_event("startup")
     async def startup() -> None:
         for db_to_init in databases_to_init:
             db_to_init.create_database()
+        logger.info(message="Database started sucessfull!")
+
+        for cache_to_init in caches_to_init:
+            cache_to_init.init_cache()
+        logger.info(message="Caches started sucessfull!")
+
+
+def add_shutdown_events(app, caches_to_close):
+    @app.on_event("shutdown")
+    async def shutdown() -> None:
+        for cache_to_close in caches_to_close:
+            await cache_to_close.close_cache()
+
+        logger.info(message="Caches closed sucessfull!")
 
 
 def create_app() -> FastAPI:
     # attach_test_debug_waiting_connection()
     # attach_debug()
-
-    container = ApplicationContainer()
-    container.check_dependencies()
-
     app = FastAPI()
 
     add_dependency_injection(app=app, container=container)
 
-    add_startup_events(app=app, databases_to_init=[container.auctions_repository()])
+    add_startup_events(
+        app=app,
+        databases_to_init=[container.auctions_repository()],
+        caches_to_init=[container.fastapi_redis_cache()],
+    )
+
+    add_shutdown_events(app=app, caches_to_close=[container.fastapi_redis_cache()])
 
     add_routers(app=app, routers=[auctions_router])
 

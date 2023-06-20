@@ -7,6 +7,14 @@ ENV_FILE = "dev.env"
 CASE_SENSITIVE = True
 
 
+class FastApiRedisCacheSettings(BaseSettings):
+    url: str = Field(env="CACHE_URL")
+
+    class Config:
+        case_sensitive = CASE_SENSITIVE
+        env_file = ENV_FILE
+
+
 class CelerySettings(BaseSettings):
     CELERY_BROKER_URL: str
     result_backend: str = Field(env="CELERY_RESULT_BACKEND")
@@ -42,6 +50,7 @@ class Settings(BaseSettings):
     logger = LoggerSettings()
     auctions = AuctionsSettings()
     celery = CelerySettings()
+    cache = FastApiRedisCacheSettings()
 
     class Config:
         case_sensitive = CASE_SENSITIVE

@@ -1,7 +1,6 @@
 from unittest.mock import MagicMock
 
-from backend.auctions import CreateAuctionService
-from backend.shared import ILogger, IUnitOfWork, IGenericRepository
+from backend.shared import ILogger, IGenericRepository
 
 
 class FakeLogger(ILogger):
