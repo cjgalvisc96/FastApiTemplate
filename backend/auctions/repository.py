@@ -1,47 +1,33 @@
-from typing import Any, Callable, Iterator
-from contextlib import contextmanager, AbstractContextManager
+from typing import Any, Iterator
 
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import Session, sessionmaker, scoped_session
+from sqlalchemy.orm import registry
+from sqlalchemy import Table, Column, String, Integer, DateTime, MetaData
 
+from backend.auctions import Auction
 from backend.auctions.models.auction import Auction
-from backend.shared import NotFoundError, IGenericRepository
-
-Base = declarative_base()
+from backend.shared import NotFoundError, IGenericRepository, SQLAlchemyRepository
 
 
-class AuctionsRepository(IGenericRepository):
-    def __init__(self, db_url: str) -> None:
-        self._engine = create_engine(url=db_url, echo=True)
-        self._session_factory = scoped_session(
-            sessionmaker(
-                autocommit=False,
-                autoflush=False,
-                bind=self._engine,
-            ),
-        )
-
+class SQLAlchemyAuctionsRepository(SQLAlchemyRepository, IGenericRepository):
     def create_database(self) -> None:
-        Base.metadata.create_all(self._engine)
-
-    @contextmanager
-    def session(self) -> Callable[..., AbstractContextManager[Session]]:
-        session: Session = self._session_factory()
-        try:
-            yield session
-        except Exception as error:
-            # logger.exception("Session rollback because of exception")
-            session.rollback()
-            raise error
-        finally:
-            session.close()
+        meta = MetaData()
+        mapper_registry = registry(metadata=meta)
+        auctions = Table(
+            'auctions',
+            mapper_registry.metadata,
+            Column('id', Integer, primary_key=True),
+            Column('title', String(20)),
+            Column('starting_price', Integer),
+            Column('ends_at', DateTime),
+        )
+        mapper_registry.map_imperatively(Auction, auctions)
+        mapper_registry.metadata.create_all(bind=self._engine)
 
     def add(self, *, auction: Auction) -> Auction:
         with self._session_factory() as session:
             session.add(auction)
             session.commit()
-            session.refresh()
+            session.refresh(auction)
             return auction
 
     def get_all(self) -> Iterator[Auction]:

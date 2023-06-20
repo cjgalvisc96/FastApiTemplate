@@ -2,7 +2,6 @@ import debugpy
 from fastapi.responses import JSONResponse
 from fastapi import status, FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
-from dependency_injector.containers import DeclarativeContainer
 
 from backend.shared import GeneralAPIException
 from backend.container import ApplicationContainer
@@ -27,7 +26,7 @@ def attach_test_debug_waiting_connection():
 
 def add_routers(*, app: FastAPI, routers: list[APIRouter]) -> None:
     for router in routers:
-        app.include_router(router=router, prefix="/v1", tags=["application"])
+        app.include_router(router=router, prefix="/v1")
 
 
 def add_middleware(*, app: FastAPI) -> None:
@@ -56,27 +55,32 @@ def add_dependency_injection(*, app: FastAPI, container: object) -> None:
     app.container = container
 
 
-def setup_di_container() -> DeclarativeContainer:
-    container = ApplicationContainer()
-    container.check_dependencies()
-
-    db = container.auctions_repository()
-    db.create_database()
-
-    return container
+def add_startup_events(app, databases_to_init):
+    @app.on_event("startup")
+    async def startup() -> None:
+        for db_to_init in databases_to_init:
+            db_to_init.create_database()
 
 
 def create_app() -> FastAPI:
     # attach_test_debug_waiting_connection()
     # attach_debug()
 
-    container = setup_di_container()
+    container = ApplicationContainer()
+    container.check_dependencies()
 
     app = FastAPI()
+
     add_dependency_injection(app=app, container=container)
+
+    add_startup_events(app=app, databases_to_init=[container.auctions_repository()])
+
     add_routers(app=app, routers=[auctions_router])
+
     add_middleware(app=app)
+
     add_handle_exceptions(app=app)
+
     return app
 
 

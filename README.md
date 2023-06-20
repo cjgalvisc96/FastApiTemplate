@@ -51,14 +51,13 @@ Finish this use cases:
     As an administrator I want to withdraw bids so that a malicious bidder does not win as auction.
 
 Missing:
-    Finish app uow.
+    Celery Setup.
+
     USE BDD in integration tests.
     Use Factory pattern in tests.
-
-    FastApi swagger docs.
-    Celery Setup.
     Create "curl" commands to add in documentation.
-    Add authentification jwt after to finish.
+
 
 DDD Version:
     Add and inject Presenters services and selectors.
+    Finish app uow.

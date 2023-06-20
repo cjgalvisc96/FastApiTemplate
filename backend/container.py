@@ -3,7 +3,7 @@ from logging import INFO
 from dependency_injector import providers, containers
 
 from backend.shared import LoggingLogger
-from backend.auctions import AuctionsRepository, CreateAuctionService
+from backend.auctions import CreateAuctionService, SQLAlchemyAuctionsRepository
 
 
 class ApplicationContainer(containers.DeclarativeContainer):
@@ -22,7 +22,7 @@ class ApplicationContainer(containers.DeclarativeContainer):
 
     # Auctions
     auctions_repository = providers.Singleton(
-        AuctionsRepository, db_url=config.auctions_repository.db_url
+        SQLAlchemyAuctionsRepository, db_url=config.auctions_repository.db_url
     )
 
     create_auction_service = providers.Factory(

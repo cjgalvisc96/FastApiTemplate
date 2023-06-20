@@ -9,7 +9,7 @@ from backend.shared import GeneralAPIException
 from backend.container import ApplicationContainer
 from backend.auctions import CreateAuctionDto, CreateAuctionService
 
-create_auction_router = APIRouter(tags=["CreateAuctions"])
+create_auction_router = APIRouter()
 
 
 class AuctionPostValidator(BaseModel):
