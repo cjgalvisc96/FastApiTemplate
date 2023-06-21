@@ -3,12 +3,15 @@ from fastapi.responses import JSONResponse
 from fastapi import status, FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 
+from backend.auctions import auctions_router
 from backend.shared import GeneralAPIException
 from backend.container import ApplicationContainer
-from backend.auctions.api.endpoints import auctions_router
 
 container = ApplicationContainer()
+
 container.check_dependencies()
+container.reset_singletons()
+
 logger = container.logging_logger()
 
 

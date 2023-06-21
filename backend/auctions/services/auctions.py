@@ -1,7 +1,7 @@
 from datetime import datetime
 from dataclasses import dataclass
 
-from backend.auctions.models.auction import Auction
+from backend.auctions import Auction
 from backend.shared import ICache, ILogger, IGenericRepository
 
 

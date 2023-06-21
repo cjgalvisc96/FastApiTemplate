@@ -23,6 +23,8 @@ class ApplicationContainer(containers.DeclarativeContainer):
         url=config.cache.url,
     )
 
+    # Auth
+
     # Auctions
     auctions_repository = providers.Singleton(
         SQLAlchemyAuctionsRepository, db_url=config.auctions.DB_URL

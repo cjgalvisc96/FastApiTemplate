@@ -1,24 +1,15 @@
-from typing import Optional
 from datetime import datetime, timedelta
 
-from pydantic import BaseModel
 from dependency_injector.wiring import inject, Provide
 from fastapi import status, Depends, Response, APIRouter
 
 from backend.shared import GeneralAPIException
 from backend.container import ApplicationContainer
-from backend.auctions import AuctionsService, CreateAuctionDto
+from backend.auctions import AuctionsService, CreateAuctionDto, AuctionPostValidator
 
 auctions_router = APIRouter(prefix="/auctions", tags=["Auctions"])
 
 MEDIA_TYPE = 'application/json'
-
-
-class AuctionPostValidator(BaseModel):
-    title: str
-    starting_price: int
-    bids: Optional[list[int]]
-    ends_at: Optional[datetime]
 
 
 @auctions_router.post("/{auction_id}", status_code=status.HTTP_201_CREATED)
