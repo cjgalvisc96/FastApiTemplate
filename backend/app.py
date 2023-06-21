@@ -3,9 +3,10 @@ from fastapi.responses import JSONResponse
 from fastapi import status, FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 
-from backend.auctions import auctions_router
 from backend.shared import GeneralAPIException
 from backend.container import ApplicationContainer
+from backend.users.api.endpoints import users_router
+from backend.auctions.api.endpoints import auctions_router
 
 container = ApplicationContainer()
 
@@ -85,7 +86,7 @@ def add_shutdown_events(app, caches_to_close):
 
 def create_app() -> FastAPI:
     # attach_test_debug_waiting_connection()
-    # attach_debug()
+    attach_debug()
     app = FastAPI()
 
     add_dependency_injection(app=app, container=container)
@@ -98,7 +99,7 @@ def create_app() -> FastAPI:
 
     add_shutdown_events(app=app, caches_to_close=[container.fastapi_redis_cache()])
 
-    add_routers(app=app, routers=[auctions_router])
+    add_routers(app=app, routers=[auctions_router, users_router])
 
     add_middleware(app=app)
 

@@ -1,0 +1,9 @@
+# Users
+curl 0.0.0.0:8000/v1/users/1 -X POST -H 'Content-type: application/json' -d '{"name": "test", "lastname": "test", "email": "test@gmail.com", "password": "test"}'
+curl 0.0.0.0:8000/v1/users/token -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "username=test@gmail.com&password=test&grant_type=&scope=&client_id=&client_secret=&scope=users:read"
+
+curl 0.0.0.0:8000/v1/users/me -H 'Content-type: application/json' -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsInNjb3BlcyI6WyJ1c2VyczpyZWFkIl0sImV4cCI6MTY4NzM4ODc3NH0.uLayS1m0RQykTc5YPyVo1C5CIec_HrE7WMurZbjOtho"
+
+# Auctions
+curl 0.0.0.0:8000/v1/auctions/1 -H 'Content-type: application/json'
+curl 0.0.0.0:8000/v1/auctions/1 -H 'Content-type: application/json' -X POST -d '{"title": "test", "starting_price": 10}'

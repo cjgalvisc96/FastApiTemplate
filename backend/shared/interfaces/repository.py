@@ -26,6 +26,10 @@ class IGenericRepository(ABC, Generic[T]):
         ...
 
     @abstractmethod
+    def get_by_filter(self, filter_: dict[str, Any]) -> T | NotFoundError:
+        ...
+
+    @abstractmethod
     def update_by_id(self, id: int, data_to_update: dict[str, Any]) -> T | NotFoundError:
         ...
 

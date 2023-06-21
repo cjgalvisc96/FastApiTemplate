@@ -46,9 +46,21 @@ class AuctionsSettings(BaseSettings):
         env_file = ENV_FILE
 
 
+class UsersSettings(BaseSettings):
+    DB_URL: str
+    SECRET_KEY: str
+    ALGORITHM: str
+    ACCESS_TOKEN_EXPIRE_MINUTES: int
+
+    class Config:
+        case_sensitive = CASE_SENSITIVE
+        env_file = ENV_FILE
+
+
 class Settings(BaseSettings):
     logger = LoggerSettings()
     auctions = AuctionsSettings()
+    users = UsersSettings()
     celery = CelerySettings()
     cache = FastApiRedisCacheSettings()
 

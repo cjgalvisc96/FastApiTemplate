@@ -34,7 +34,7 @@ services:
       - mysql_data:/var/lib/mysql
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: "auctions"
+      MYSQL_DATABASE: "app_database"
       MYSQL_USER: "user"
       MYSQL_PASSWORD: "password"
       MYSQL_ROOT_PASSWORD: "root"

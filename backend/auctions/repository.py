@@ -24,6 +24,14 @@ class SQLAlchemyAuctionsRepository(SQLAlchemyDatabase, IGenericRepository):
 
             return auction
 
+    def get_by_filter(self, filter_: dict[str, Any]) -> Auction:
+        with self._session_factory() as session:
+            auction = session.query(Auction).filter_by(**filter_)
+            if not auction:
+                raise NotFoundError(0)
+
+            return auction.first()
+
     def update_by_id(self, id: int, data_to_update: dict[str, Any]) -> Auction:
         auction = self.get_by_id(id=id)
         with self._session_factory() as session:

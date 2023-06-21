@@ -6,7 +6,7 @@ DEVELOP_COMPOSE_FILE_PATH = "./docker/docker-compose.dev.yml"
 up: CMD=up
 down: CMD=down
 backend_sh: CMD=exec backend sh
-db_sh: CMD=exec db mysql -u root --password=root auctions 
+db_sh: CMD=exec db mysql -u root --password=root app_database 
 logs: CMD=logs -f backend
 
 up down sh backend_sh db_sh logs:
@@ -37,7 +37,7 @@ coverage:
 
 .PHONY: reboot
 reboot: down
-	-yes | docker image rm app_backend
+	-yes | docker image rm app_backend app_celery_worker app_celery_beat
 	make up
 
 .PHONY: prune
