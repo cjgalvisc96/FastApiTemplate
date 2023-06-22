@@ -1,7 +1,7 @@
 from typing import Any
 from dataclasses import dataclass
 
-from backend.users import User
+from backend.users.models import User
 from backend.shared import ILogger, IGenericRepository
 
 

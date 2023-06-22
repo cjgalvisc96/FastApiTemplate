@@ -25,14 +25,15 @@ class ApplicationContainer(containers.DeclarativeContainer):
     )
     # Users
     users_repository = providers.Singleton(SQLAlchemyUsersRepository, db_url=config.users.DB_URL)
-    users_service = providers.Factory(
-        UsersService, repository=users_repository, logger=logging_logger
-    )
-    auth_service = providers.Factory(
+    auth_service = providers.Singleton(
         AuthService,
         secret_key=config.users.SECRET_KEY,
         algorithm=config.users.ALGORITHM,
         default_token_time_expiration=config.users.ACCESS_TOKEN_EXPIRE_MINUTES,
+        users_repository=users_repository,
+    )
+    users_service = providers.Factory(
+        UsersService, repository=users_repository, logger=logging_logger
     )
 
     # Auctions

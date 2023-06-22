@@ -44,6 +44,7 @@ poetry add black isort pytest coverage fastapi uvicorn[standard] pydantic
 
 # TODO:
 
+Rename Interfaces(remove prefix "I") and implements(add sufix Impl)
 Finish this use cases:
     As an administrator I want to create auctions so that bidders can place bids on them.
     As a bidder I want to place a bid so that I can win the auction
@@ -57,3 +58,5 @@ Missing:
 DDD Version:
     Add and inject Presenters services and selectors.
     Finish app uow.
+
+Resolve TODOs

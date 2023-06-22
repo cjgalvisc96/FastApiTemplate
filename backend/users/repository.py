@@ -1,6 +1,6 @@
 from typing import Any, Iterator
 
-from backend.users import User
+from backend.users.models import User
 from backend.shared import NotFoundError, IGenericRepository, SQLAlchemyDatabase
 
 
