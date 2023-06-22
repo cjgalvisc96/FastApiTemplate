@@ -2,7 +2,7 @@
 curl 0.0.0.0:8000/v1/users/1 -X POST -H 'Content-type: application/json' -d '{"name": "test", "lastname": "test", "email": "test@gmail.com", "password": "test"}'
 curl 0.0.0.0:8000/v1/users/token -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "username=test@gmail.com&password=test&grant_type=&scope=&client_id=&client_secret=&scope=users:read"
 
-curl 0.0.0.0:8000/v1/users/me -H 'Content-type: application/json' -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsInNjb3BlcyI6WyJ1c2VyczpyZWFkIl0sImV4cCI6MTY4NzUwODUyNH0.j9wMPmf47WMXlnTc20gP2J5mHpSr5d1nbTveZg6vKE8"
+curl 0.0.0.0:8000/v1/users/me -H 'Content-type: application/json' -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsInNjb3BlcyI6WyJ1c2VyczpyZWFkIl0sImV4cCI6MTY4NzUyOTg2NX0.LM_ogOU3yPDNkjMyhvSh9x5Tz8DZ9vR31f_F3CBgN-M"
 
 # Auctions
 curl 0.0.0.0:8000/v1/auctions/1 -H 'Content-type: application/json'

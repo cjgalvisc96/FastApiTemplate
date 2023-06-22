@@ -8,6 +8,7 @@ from passlib.context import CryptContext
 from backend.users.models import User
 from backend.users.exceptions import (
     InactiveUser,
+    TokenMalformed,
     UserDoesNotExist,
     CredentialsIncorrect,
     PermissionsIncorrect,
@@ -36,7 +37,10 @@ class AuthService:
         self._users_repository = users_repository
 
     def _decode_token_payload(self, *, token: str) -> dict[str, Any]:
-        return jwt.decode(token=token, key=self._secret_key, algorithms=[self._algorithm])
+        try:
+            return jwt.decode(token=token, key=self._secret_key, algorithms=[self._algorithm])
+        except Exception:
+            raise TokenMalformed("Token malformed")
 
     @staticmethod
     def encypt_password(*, password: str) -> str:
@@ -59,6 +63,7 @@ class AuthService:
 
     def get_authenticated_user(self, security_scopes, token) -> User:
         payload = self._decode_token_payload(token=token)
+
         username: str = payload.get("sub")
         if username is None:
             raise CredentialsIncorrect("Could not validate credentials")

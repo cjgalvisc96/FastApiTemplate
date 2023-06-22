@@ -14,6 +14,10 @@ class AuthException(Exception):
     ...
 
 
+class TokenMalformed(AuthException):
+    ...
+
+
 class CredentialsIncorrect(AuthException):
     ...
 
