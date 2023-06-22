@@ -1,8 +1,11 @@
+import logging
 from typing import Any
 from dataclasses import dataclass
 
 from backend.users.models import User
-from backend.shared import ILogger, IGenericRepository
+from backend.shared import IGenericRepository
+
+logger = logging.getLogger(name=__name__)
 
 
 @dataclass(frozen=True)
@@ -15,9 +18,8 @@ class CreateUserDto:
 
 
 class UsersService:
-    def __init__(self, *, repository: IGenericRepository, logger: ILogger) -> None:
+    def __init__(self, *, repository: IGenericRepository) -> None:
         self._repository = repository
-        self._logger = logger
 
     def create_user(self, *, input_dto: CreateUserDto) -> User:
         user = User(
@@ -28,7 +30,7 @@ class UsersService:
         )
 
         user_created = self._repository.add(user=user)
-        self._logger.info(message="User created")
+        logger.info(msg="User created")
 
         return user_created
 

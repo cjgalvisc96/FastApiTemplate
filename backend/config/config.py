@@ -31,7 +31,7 @@ class CelerySettings(BaseSettings):
 
 class LoggerSettings(BaseSettings):
     NAME: str = "BackendLogger"
-    FILENMAE: str = "logs.txt"
+    FILENAME: str = "logs.txt"
     FILEMODE: str = "a"
     LEVEL: int = INFO
     FORMAT: str = "%(asctime)s | %(name)s | %(levelname)s | %(message)s"

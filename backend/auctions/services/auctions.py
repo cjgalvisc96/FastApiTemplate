@@ -1,8 +1,11 @@
+import logging
 from datetime import datetime
 from dataclasses import dataclass
 
 from backend.auctions import Auction
-from backend.shared import ICache, ILogger, IGenericRepository
+from backend.shared import ICache, IGenericRepository
+
+logger = logging.getLogger(name=__name__)
 
 
 @dataclass(frozen=True)
@@ -14,9 +17,8 @@ class CreateAuctionDto:
 
 
 class AuctionsService:
-    def __init__(self, *, repository: IGenericRepository, logger: ILogger, cache: ICache) -> None:
+    def __init__(self, *, repository: IGenericRepository, cache: ICache) -> None:
         self._repository = repository
-        self._logger = logger
         self._cache = cache.get_cache()
 
     def create_auction(self, *, input_dto: CreateAuctionDto) -> Auction:
@@ -27,7 +29,7 @@ class AuctionsService:
         )
 
         added = self._repository.add(auction=auction)
-        self._logger.info(message="Auction created")
+        logger.info(msg="Auction created")
 
         return added
 

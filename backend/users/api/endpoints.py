@@ -24,6 +24,7 @@ oauth2_scheme = OAuth2PasswordBearer(
 # TODO: Move this to backend.users.utils.py or backend.shared.auth.py
 # is neccesary resolve the 'token: str = Depends(oauth2_scheme)' Dependency
 
+
 @inject
 def get_authenticated_user(
     security_scopes: SecurityScopes,

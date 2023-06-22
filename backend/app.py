@@ -1,3 +1,5 @@
+import logging
+
 import debugpy
 from fastapi.responses import JSONResponse
 from fastapi import status, FastAPI, APIRouter
@@ -13,23 +15,23 @@ container = ApplicationContainer()
 container.check_dependencies()
 container.reset_singletons()
 
-logger = container.logging_logger()
+logger = logging.getLogger(name=__name__)
 
 
 def attach_debug():
     debug_host = "0.0.0.0"
     debug_port = 9500
     debugpy.listen((debug_host, debug_port))
-    logger.info(message=f'DEBUG Attached!, running in: {debug_host}:{debug_port}')
+    logger.info(msg=f'DEBUG Attached!, running in: {debug_host}:{debug_port}')
 
 
 def attach_test_debug_waiting_connection():
     debug_host = "0.0.0.0"
     debug_port = 9500
     debugpy.listen((debug_host, debug_port))
-    logger.info(message='Waiting for DEBUG attaching')
+    logger.info(msg='Waiting for DEBUG attaching')
     debugpy.wait_for_client()
-    logger.info(message=f'DEBUG Attached!, running in: {debug_host}:{debug_port}')
+    logger.info(msg=f'DEBUG Attached!, running in: {debug_host}:{debug_port}')
 
 
 def add_routers(*, app: FastAPI, routers: list[APIRouter]) -> None:
@@ -66,13 +68,24 @@ def add_dependency_injection(*, app: FastAPI, container: object) -> None:
 def add_startup_events(app, databases_to_init, caches_to_init):
     @app.on_event("startup")
     async def startup() -> None:
+        # Setup logging
+        loggin_settings = container.config()['logger']
+        logging.basicConfig(
+            filename=loggin_settings['FILENAME'],
+            filemode=loggin_settings['FILEMODE'],
+            level=loggin_settings['LEVEL'],
+            format=loggin_settings['FORMAT'],
+            datefmt=loggin_settings['DATE_FORMAT'],
+        )
+        # Setup DB
         for db_to_init in databases_to_init:
             db_to_init.create_database()
-        logger.info(message="Database started sucessfull!")
+        logger.info(msg="Database started sucessfull!")
 
+        # Setup Cache
         for cache_to_init in caches_to_init:
             cache_to_init.init_cache()
-        logger.info(message="Caches started sucessfull!")
+        logger.info(msg="Caches started sucessfull!")
 
 
 def add_shutdown_events(app, caches_to_close):
@@ -81,7 +94,7 @@ def add_shutdown_events(app, caches_to_close):
         for cache_to_close in caches_to_close:
             await cache_to_close.close_cache()
 
-        logger.info(message="Caches closed sucessfull!")
+        logger.info(msg="Caches closed sucessfull!")
 
 
 def create_app() -> FastAPI:

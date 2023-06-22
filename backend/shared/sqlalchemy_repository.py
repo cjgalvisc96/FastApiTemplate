@@ -1,9 +1,12 @@
+import logging
 from typing import Callable
 from datetime import datetime
 from contextlib import contextmanager, AbstractContextManager
 
 from sqlalchemy.orm import Session, registry, sessionmaker, scoped_session
 from sqlalchemy import Table, Column, String, Boolean, Integer, DateTime, MetaData, create_engine
+
+logger = logging.getLogger(name=__name__)
 
 
 class SQLAlchemyDatabase:
@@ -63,7 +66,7 @@ class SQLAlchemyDatabase:
         try:
             yield session
         except Exception as error:
-            # logger.error(message="Session rollback because of exception")
+            logger.error(msg="Session rollback because of exception")
             session.rollback()
             raise error
         finally:
