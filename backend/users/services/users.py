@@ -3,7 +3,7 @@ from typing import Any
 from dataclasses import dataclass
 
 from backend.users.models import User
-from backend.shared import IGenericRepository
+from backend.shared import GenericRepository
 
 logger = logging.getLogger(name=__name__)
 
@@ -18,7 +18,7 @@ class CreateUserDto:
 
 
 class UsersService:
-    def __init__(self, *, repository: IGenericRepository) -> None:
+    def __init__(self, *, repository: GenericRepository) -> None:
         self._repository = repository
 
     def create_user(self, *, input_dto: CreateUserDto) -> User:

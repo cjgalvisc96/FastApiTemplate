@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod, abstractstaticmethod
 
 
-class ICache(ABC):
+class Cache(ABC):
     @abstractmethod
     def init_cache(self) -> None:
         ...

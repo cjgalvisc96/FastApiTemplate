@@ -1,10 +1,10 @@
 from typing import Any, Iterator
 
 from backend.users.models import User
-from backend.shared import NotFoundError, IGenericRepository, SQLAlchemyDatabase
+from backend.shared import NotFoundError, GenericRepository, SQLAlchemyDatabase
 
 
-class SQLAlchemyUsersRepository(SQLAlchemyDatabase, IGenericRepository):
+class SQLAlchemyUsersRepositoryImp(SQLAlchemyDatabase, GenericRepository):
     def add(self, *, user: User) -> User:
         with self._session_factory() as session:
             session.add(user)

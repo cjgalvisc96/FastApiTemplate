@@ -1,9 +1,9 @@
 from dependency_injector import providers, containers
 
 from backend.config import settings
-from backend.shared import FastApiRedisCache
-from backend.auctions import AuctionsService, SQLAlchemyAuctionsRepository
-from backend.users import AuthService, UsersService, SQLAlchemyUsersRepository
+from backend.shared import FastApiRedisCacheImp
+from backend.auctions import AuctionsService, SQLAlchemyAuctionsRepositoryImp
+from backend.users import AuthService, UsersService, SQLAlchemyUsersRepositoryImp
 
 
 class ApplicationContainer(containers.DeclarativeContainer):
@@ -11,11 +11,11 @@ class ApplicationContainer(containers.DeclarativeContainer):
     wiring_config = containers.WiringConfiguration(packages=[".auctions", ".users"])
     # General
     fastapi_redis_cache = providers.Singleton(
-        FastApiRedisCache,
+        FastApiRedisCacheImp,
         url=config.cache.url,
     )
     # Users
-    users_repository = providers.Singleton(SQLAlchemyUsersRepository, db_url=config.users.DB_URL)
+    users_repository = providers.Singleton(SQLAlchemyUsersRepositoryImp, db_url=config.users.DB_URL)
     auth_service = providers.Singleton(
         AuthService,
         secret_key=config.users.SECRET_KEY,
@@ -27,7 +27,7 @@ class ApplicationContainer(containers.DeclarativeContainer):
 
     # Auctions
     auctions_repository = providers.Singleton(
-        SQLAlchemyAuctionsRepository, db_url=config.auctions.DB_URL
+        SQLAlchemyAuctionsRepositoryImp, db_url=config.auctions.DB_URL
     )
 
     auctions_service = providers.Factory(

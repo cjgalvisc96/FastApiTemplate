@@ -12,7 +12,7 @@ class NotFoundError(Exception):
         super().__init__(f"{self.entity_name} not found, id: {entity_id}")
 
 
-class IGenericRepository(ABC, Generic[T]):
+class GenericRepository(ABC, Generic[T]):
     @abstractmethod
     def add(self, entity: T) -> None:
         ...

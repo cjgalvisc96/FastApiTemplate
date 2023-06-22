@@ -1,16 +1,16 @@
 __all__ = [
     "NotFoundError",
-    "IGenericRepository",
+    "GenericRepository",
     "GeneralAPIException",
-    "ICache",
+    "Cache",
     "SQLAlchemyDatabase",
-    "FastApiRedisCache",
+    "FastApiRedisCacheImp",
 ]
 
-from backend.shared.interfaces.repository import NotFoundError, IGenericRepository
-from backend.shared.interfaces.cache import ICache
+from backend.shared.interfaces.repository import NotFoundError, GenericRepository
+from backend.shared.interfaces.cache import Cache
 
 from backend.shared.exceptions import GeneralAPIException
 
 from backend.shared.sqlalchemy_repository import SQLAlchemyDatabase
-from backend.shared.cache import FastApiRedisCache
+from backend.shared.cache import FastApiRedisCacheImp

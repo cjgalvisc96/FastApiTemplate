@@ -1,10 +1,10 @@
 from typing import Any, Iterator
 
 from backend.auctions import Auction
-from backend.shared import NotFoundError, IGenericRepository, SQLAlchemyDatabase
+from backend.shared import NotFoundError, GenericRepository, SQLAlchemyDatabase
 
 
-class SQLAlchemyAuctionsRepository(SQLAlchemyDatabase, IGenericRepository):
+class SQLAlchemyAuctionsRepositoryImp(SQLAlchemyDatabase, GenericRepository):
     def add(self, *, auction: Auction) -> Auction:
         with self._session_factory() as session:
             session.add(auction)
