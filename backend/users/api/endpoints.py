@@ -2,10 +2,10 @@ from fastapi import Depends, APIRouter
 from dependency_injector.wiring import inject, Provide
 from fastapi.security import SecurityScopes, OAuth2PasswordRequestForm
 
-from backend.shared import GeneralAPIException
 from backend.container import ApplicationContainer
 from backend.users.services.auth import AuthService
 from backend.users.utils import GetAuthenticatedUser
+from backend.shared import encypt_password, GeneralAPIException
 from backend.users.api.validator import CreateUserPayloadValidator
 from backend.users.services.users import UsersService, CreateUserDto
 from backend.users.api.serializers import TokenSerializer, UserSerlializer
@@ -35,14 +35,13 @@ async def create_user(
     user_id: int,
     user: CreateUserPayloadValidator,
     users_service: UsersService = Depends(Provide[ApplicationContainer.users_service]),
-    auth_service: AuthService = Depends(Provide[ApplicationContainer.auth_service]),
 ):
     input_dto = CreateUserDto(
         id=user_id,
         name=user.name,
         lastname=user.lastname,
         email=user.email,
-        password=auth_service.encypt_password(password=user.password),
+        password=encypt_password(password=user.password),
     )
     try:
         user_created = users_service.create_user(input_dto=input_dto)

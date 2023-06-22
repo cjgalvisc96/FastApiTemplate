@@ -42,10 +42,6 @@ class AuthService:
         except Exception:
             raise TokenMalformed("Token malformed")
 
-    @staticmethod
-    def encypt_password(*, password: str) -> str:
-        return pwd_context.hash(password)
-
     def create_access_token(self, *, email, password, scopes) -> str:
         user = self._users_repository.get_by_filter(filter_={'email': email})
         if not user:

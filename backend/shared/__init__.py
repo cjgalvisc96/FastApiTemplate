@@ -5,6 +5,7 @@ __all__ = [
     "Cache",
     "SQLAlchemyDatabase",
     "FastApiRedisCacheImp",
+    "encypt_password",
 ]
 
 from backend.shared.interfaces.repository import NotFoundError, GenericRepository
@@ -14,3 +15,5 @@ from backend.shared.exceptions import GeneralAPIException
 
 from backend.shared.sqlalchemy_repository import SQLAlchemyDatabase
 from backend.shared.cache import FastApiRedisCacheImp
+
+from backend.shared.utils import encypt_password
