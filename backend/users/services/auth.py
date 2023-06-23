@@ -3,9 +3,9 @@ from datetime import datetime, timedelta
 
 from jose import jwt
 from pydantic import BaseModel
-from passlib.context import CryptContext
 
 from backend.users.models import User
+from backend.shared import pwd_context
 from backend.users.exceptions import (
     InactiveUser,
     TokenMalformed,
@@ -13,8 +13,6 @@ from backend.users.exceptions import (
     CredentialsIncorrect,
     PermissionsIncorrect,
 )
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 class TokenDataSerializer(BaseModel):
@@ -74,8 +72,16 @@ class AuthService:
         if not user.active:
             raise InactiveUser("Inactive user")
 
-        for scope in security_scopes.scopes:
-            if scope not in token_data.scopes:
-                raise PermissionsIncorrect("Not enough permissions")
+        security_scopes = security_scopes.scopes
+
+        if not security_scopes:
+            return user
+
+        if not self.check_scopes(security_scopes=security_scopes, user_scopes=token_data.scopes):
+            raise PermissionsIncorrect("Not enough permissions")
 
         return user
+
+    @staticmethod
+    def check_scopes(*, security_scopes: list[str], user_scopes: list[str]) -> bool:
+        return False if not set(security_scopes).intersection(set(user_scopes)) else True

@@ -5,6 +5,7 @@ __all__ = [
     "Cache",
     "SQLAlchemyDatabase",
     "FastApiRedisCacheImp",
+    "pwd_context",
     "encypt_password",
 ]
 
@@ -16,4 +17,4 @@ from backend.shared.exceptions import GeneralAPIException
 from backend.shared.sqlalchemy_repository import SQLAlchemyDatabase
 from backend.shared.cache import FastApiRedisCacheImp
 
-from backend.shared.utils import encypt_password
+from backend.shared.utils import pwd_context, encypt_password

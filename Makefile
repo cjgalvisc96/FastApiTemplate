@@ -31,8 +31,6 @@ coverage:
 	docker-compose -f $(DEVELOP_COMPOSE_FILE_PATH) exec backend coverage run --rcfile="../pyproject.toml" -m pytest --disable-pytest-warnings --durations=0 -vv tests
 	docker-compose -f $(DEVELOP_COMPOSE_FILE_PATH) exec backend coverage report --rcfile="../pyproject.toml"
 
-# install_from_sractch:
-
 # onboard:
 
 .PHONY: reboot
@@ -40,8 +38,8 @@ reboot: down
 	-yes | docker image rm app_backend app_celery_worker app_celery_beat
 	make up
 
-.PHONY: prune
-prune: down
+.PHONY: install_from_scratch
+install_from_scratch: down
 	sudo rm -rf docker/localstack_data
 	-sudo rm celerybeat-schedule
 	-yes | docker system prune -a

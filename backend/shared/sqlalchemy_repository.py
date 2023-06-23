@@ -1,12 +1,13 @@
 import logging
-from typing import Callable
 from datetime import datetime
+from typing import Any, Callable
 from contextlib import contextmanager, AbstractContextManager
 
 from sqlalchemy.orm import Session, registry, sessionmaker, scoped_session
 from sqlalchemy import Table, Column, String, Boolean, Integer, DateTime, MetaData, create_engine
 
 from backend.shared.utils import encypt_password
+from backend.shared.exceptions import SQLAlchemyException
 
 logger = logging.getLogger(name=__name__)
 
@@ -22,21 +23,22 @@ class SQLAlchemyDatabase:
             ),
         )
 
-    def insert_default_records(self, model_: object, data: object, filter_) -> None:
+    def insert_default_records(
+        self, *, model_: object, data: object, filter_: dict[str, Any]
+    ) -> None:
         record = None
-        with self._session_factory() as session:
+        with self.session() as session:
             if filter_:
-                record = session.query(model_).filter_by(**filter_)
+                record = session.query(model_).filter_by(**filter_).first()
 
-            if not record:
+            if record is None or not record:
                 session.add(data)
                 session.commit()
-                session.refresh(model_)
+                session.refresh(data)
 
-    def create_database(self) -> None:
+    def map_tables(self, models: dict[str, object]) -> None:
         meta = MetaData()
         mapper_registry = registry(metadata=meta)
-
         auctions = Table(
             'auctions',
             mapper_registry.metadata,
@@ -65,13 +67,15 @@ class SQLAlchemyDatabase:
             Column('updated_at', DateTime, default=datetime.now, onupdate=datetime.now),
         )
 
+        mapper_registry.map_imperatively(models['auction'], auctions)
+        mapper_registry.map_imperatively(models['user'], users)
+        mapper_registry.metadata.create_all(bind=self._engine)
+
+    def create_database(self) -> None:
         from backend.users import User
         from backend.auctions import Auction
 
-        mapper_registry.map_imperatively(Auction, auctions)
-        mapper_registry.map_imperatively(User, users)
-
-        mapper_registry.metadata.create_all(bind=self._engine)
+        self.map_tables(models={"user": User, "auction": Auction})
 
         # Insert default values
         user = User(
@@ -81,6 +85,7 @@ class SQLAlchemyDatabase:
             hashed_password=encypt_password(password='admin'),
         )
         self.insert_default_records(model_=User, data=user, filter_={'email': user.email})
+        logger.info("Default DB data created sucessfull!")
 
     @contextmanager
     def session(self) -> Callable[..., AbstractContextManager[Session]]:
@@ -88,8 +93,8 @@ class SQLAlchemyDatabase:
         try:
             yield session
         except Exception as error:
-            logger.error(msg="Session rollback because of exception")
+            logger.error(msg=f"DB Session rollback because of exception={error}")
             session.rollback()
-            raise error
+            raise SQLAlchemyException(f"DB error={error}")
         finally:
             session.close()

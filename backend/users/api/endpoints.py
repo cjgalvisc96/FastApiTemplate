@@ -34,6 +34,9 @@ async def login_for_access_token(
 async def create_user(
     user_id: int,
     user: CreateUserPayloadValidator,
+    authenticated_user=Depends(
+        GetAuthenticatedUser(security_scopes=SecurityScopes(scopes=['users:all', 'users:write']))
+    ),
     users_service: UsersService = Depends(Provide[ApplicationContainer.users_service]),
 ):
     input_dto = CreateUserDto(
@@ -52,10 +55,9 @@ async def create_user(
 
 
 @users_router.get(path="/me", response_model=UserSerlializer)
-@inject
 async def get_my_detail(
     authenticated_user=Depends(
-        GetAuthenticatedUser(security_scopes=SecurityScopes(scopes=['users:read']))
+        GetAuthenticatedUser(security_scopes=SecurityScopes(scopes=['users:all', 'users:read']))
     ),
 ):
     return authenticated_user
