@@ -1,4 +1,4 @@
-from fastapi import Depends, APIRouter
+from fastapi import status, Depends, APIRouter
 from dependency_injector.wiring import inject, Provide
 from fastapi.security import SecurityScopes, OAuth2PasswordRequestForm
 
@@ -13,7 +13,7 @@ from backend.users.api.serializers import TokenSerializer, UserSerlializer
 users_router = APIRouter(prefix="/users", tags=["Users"])
 
 
-@users_router.post("/token", response_model=TokenSerializer)
+@users_router.post("/token", response_model=TokenSerializer, status_code=status.HTTP_200_OK)
 @inject
 async def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
@@ -29,7 +29,9 @@ async def login_for_access_token(
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@users_router.post("/{user_id}", response_model=UserSerlializer)
+@users_router.post(
+    "/{user_id}", response_model=UserSerlializer, status_code=status.HTTP_201_CREATED
+)
 @inject
 async def create_user(
     user_id: int,
@@ -54,7 +56,7 @@ async def create_user(
     return user_created
 
 
-@users_router.get(path="/me", response_model=UserSerlializer)
+@users_router.get(path="/me", response_model=UserSerlializer, status_code=status.HTTP_200_OK)
 async def get_my_detail(
     authenticated_user=Depends(
         GetAuthenticatedUser(security_scopes=SecurityScopes(scopes=['users:all', 'users:read']))

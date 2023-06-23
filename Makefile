@@ -6,10 +6,11 @@ DEVELOP_COMPOSE_FILE_PATH = "./docker/docker-compose.dev.yml"
 up: CMD=up
 down: CMD=down
 backend_sh: CMD=exec backend sh
+test: CMD=exec backend poetry run pytest --disable-pytest-warnings --durations=0 -vv tests
 db_sh: CMD=exec db mysql -u root --password=root app_database 
 logs: CMD=logs -f backend
 
-up down sh backend_sh db_sh logs:
+up down sh backend_sh db_sh logs test:
 	docker-compose -f $(DEVELOP_COMPOSE_FILE_PATH) $(CMD)
 
 .PHONY: linter_apply
@@ -21,10 +22,6 @@ linter_apply:
 linter_check:
 	docker-compose -f $(DEVELOP_COMPOSE_FILE_PATH) exec backend poetry run isort . --check
 	docker-compose -f $(DEVELOP_COMPOSE_FILE_PATH) exec backend poetry run black . --check
-
-.PHONY: tests
-tests:
-	docker-compose -f $(DEVELOP_COMPOSE_FILE_PATH) exec backend poetry run pytest --disable-pytest-warnings --durations=0 -vv tests
 
 .PHONY: coverage
 coverage:

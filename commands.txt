@@ -8,3 +8,5 @@ curl 0.0.0.0:8000/v1/users/1 -X POST -H 'Content-type: application/json' -H "Aut
 # Auctions
 curl 0.0.0.0:8000/v1/auctions/1 -H 'Content-type: application/json'
 curl 0.0.0.0:8000/v1/auctions/1 -H 'Content-type: application/json' -X POST -d '{"title": "test", "starting_price": 10}'
+
+DELETE FROM users WHERE name='TestName';

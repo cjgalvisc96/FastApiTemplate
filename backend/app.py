@@ -4,16 +4,12 @@ import debugpy
 from fastapi.responses import JSONResponse
 from fastapi import status, FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
+from dependency_injector.containers import DeclarativeContainer
 
 from backend.shared import GeneralAPIException
 from backend.container import ApplicationContainer
 from backend.users.api.endpoints import users_router
 from backend.auctions.api.endpoints import auctions_router
-
-container = ApplicationContainer()
-
-container.check_dependencies()
-container.reset_singletons()
 
 logger = logging.getLogger(name=__name__)
 
@@ -97,9 +93,9 @@ def add_shutdown_events(app, caches_to_close):
         logger.info(msg="Caches closed sucessfull!")
 
 
-def create_app() -> FastAPI:
+def create_app(*, container: DeclarativeContainer) -> FastAPI:
     # attach_test_debug_waiting_connection()
-    attach_debug()
+    # attach_debug()
     app = FastAPI()
 
     add_dependency_injection(app=app, container=container)
@@ -121,4 +117,8 @@ def create_app() -> FastAPI:
     return app
 
 
-app = create_app()
+container = ApplicationContainer()
+container.check_dependencies()
+container.reset_singletons()
+
+app = create_app(container=container)
