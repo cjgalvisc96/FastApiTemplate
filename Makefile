@@ -7,7 +7,8 @@ up: CMD=up
 down: CMD=down
 backend_sh: CMD=exec backend sh
 # test: CMD=exec backend poetry run pytest --disable-pytest-warnings --durations=0 -vv tests/integration
-test: CMD=run --rm backend poetry run pytest --disable-pytest-warnings --durations=0 -vv tests/integration/users/test_create_user_using_override.py
+# test: CMD=run --rm backend poetry run pytest --disable-pytest-warnings --durations=0 -vv tests/integration/users/test_create_user_using_override.py
+test: CMD=run --rm backend poetry run pytest --disable-pytest-warnings --durations=0 -vv tests/unit/users/
 db_sh: CMD=exec db mysql -u root --password=root app_database 
 logs: CMD=logs -f backend
 
