@@ -44,19 +44,11 @@ poetry add black isort pytest coverage fastapi uvicorn[standard] pydantic
 
 # TODO:
 
-Finish this use cases:
-    As an administrator I want to create auctions so that bidders can place bids on them.
-    As a bidder I want to place a bid so that I can win the auction
-    As a bidder I want to recieve e-mail notification when my bid is a winning one.
-    As an administrator I want to withdraw bids so that a malicious bidder does not win as auction.
-
 Missing:
-    USE BDD in integration tests.
     Use Factory pattern in tests.
     Replace black by Ruff like a pylinter.
 
 DDD Version:
     Add and inject Presenters services and selectors.
-    Finish app uow.
 
 Resolve TODOs

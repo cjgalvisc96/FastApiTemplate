@@ -1,5 +1,5 @@
 import logging
-from typing import Any, Callable
+from typing import Callable
 from contextlib import contextmanager, AbstractContextManager
 
 from sqlalchemy import create_engine
@@ -27,17 +27,37 @@ class SQLAlchemyDatabase:
 
     def create_database(self) -> None:
         Base.metadata.create_all(self._engine)
+        self.insert_default_records()
 
-        # Insert default values
+    def insert_default_records(self) -> None:
         from backend.users import User
 
-        user = User(
-            name="admin",
-            lastname="admin",
-            email="admin@gmail.com",
-            hashed_password=encypt_password(password='admin'),
+        records_to_insert = (
+            {
+                "model": User,
+                "record": User(
+                    name="admin",
+                    lastname="admin",
+                    email="admin@gmail.com",
+                    hashed_password=encypt_password(password='admin'),
+                ),
+                "filter": {'email': 'admin@gmail.com'},
+            },
         )
-        self.insert_default_records(model_=User, data=user, filter_={'email': user.email})
+        with self.session() as session:
+            for record_to_insert in records_to_insert:
+                if record_to_insert["filter"]:
+                    record = (
+                        session.query(record_to_insert["model"])
+                        .filter_by(**record_to_insert["filter"])
+                        .first()
+                    )
+
+                if record is None or not record:
+                    session.add(record_to_insert["record"])
+                    session.commit()
+                    session.refresh(record_to_insert["record"])
+
         logger.info("Default DB data created sucessfull!")
 
     @contextmanager
@@ -51,16 +71,3 @@ class SQLAlchemyDatabase:
             raise SQLAlchemyException(f"DB error={error}")
         finally:
             session.close()
-
-    def insert_default_records(
-        self, *, model_: object, data: object, filter_: dict[str, Any]
-    ) -> None:
-        record = None
-        with self.session() as session:
-            if filter_:
-                record = session.query(model_).filter_by(**filter_).first()
-
-            if record is None or not record:
-                session.add(data)
-                session.commit()
-                session.refresh(data)
