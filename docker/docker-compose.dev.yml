@@ -20,7 +20,6 @@ services:
     ports:
       - "8000:8000"
       - "9500:9500" # To expose debugger port
-    command: runserver_local
     networks:
       - app_network
 
@@ -34,7 +33,7 @@ services:
       - mysql_data:/var/lib/mysql
     restart: unless-stopped
     environment:
-      DATABASES: "app_database,test_app_database"
+      DATABASES: "app_database"
       MYSQL_USER: "user"
       MYSQL_PASSWORD: "password"
       MYSQL_ROOT_PASSWORD: "root"
@@ -42,9 +41,9 @@ services:
       - "3306:3306"
     healthcheck:
       test: "mysql --user=root --password=root --execute \"SHOW DATABASES;\""
-      interval: 2s
-      timeout: 20s
-      retries: 10
+      interval: 5s
+      timeout: 10s
+      retries: 5
     networks:
       - app_network
   

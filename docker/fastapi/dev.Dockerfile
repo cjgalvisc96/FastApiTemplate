@@ -1,4 +1,3 @@
-# FROM python:3.10-alpine3.18
 FROM python:3.11-alpine3.18
 
 # Prevent creating pyc files
@@ -7,7 +6,10 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     CRYPTOGRAPHY_DONT_BUILD_RUST=1 \
     # Prevent buffering std out
     PYTHONUNBUFFERED=1 \
-    PYTHONPATH=${PYTHONPATH}:${PWD} 
+    # Owners
+    PYTHONPATH=${PYTHONPATH}:${PWD} \
+    HOST=0.0.0.0 \
+    PORT=8000
 
 WORKDIR /app
 
@@ -27,10 +29,7 @@ COPY requirements.txt /app/
 RUN pip install -r requirements.txt
 # TODO: Temporary==
 
-ADD ./docker/docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod a+x /docker-entrypoint.sh
-
 RUN mkdir /app/backend
 COPY ./backend /app/backend/
 
-ENTRYPOINT ["sh", "/docker-entrypoint.sh"]
+CMD uvicorn backend.app:app --host ${HOST} --port ${PORT} --reload

@@ -53,6 +53,7 @@ Finish this use cases:
 Missing:
     USE BDD in integration tests.
     Use Factory pattern in tests.
+    Replace black by Ruff like a pylinter.
 
 DDD Version:
     Add and inject Presenters services and selectors.
