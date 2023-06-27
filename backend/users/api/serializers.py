@@ -15,3 +15,6 @@ class UserSerlializer(BaseModel):
     name: str
     lastname: str
     email: str
+
+    class Config:
+        orm_mode = True

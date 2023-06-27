@@ -9,7 +9,6 @@ from dependency_injector.containers import DeclarativeContainer
 from backend.shared import GeneralAPIException
 from backend.container import ApplicationContainer
 from backend.users.api.endpoints import users_router
-from backend.auctions.api.endpoints import auctions_router
 
 logger = logging.getLogger(name=__name__)
 
@@ -102,13 +101,13 @@ def create_app(*, container: DeclarativeContainer) -> FastAPI:
 
     add_startup_events(
         app=app,
-        databases_to_init=[container.auctions_repository()],
+        databases_to_init=[container.db()],
         caches_to_init=[container.fastapi_redis_cache()],
     )
 
     add_shutdown_events(app=app, caches_to_close=[container.fastapi_redis_cache()])
 
-    add_routers(app=app, routers=[auctions_router, users_router])
+    add_routers(app=app, routers=[users_router])
 
     add_middleware(app=app)
 

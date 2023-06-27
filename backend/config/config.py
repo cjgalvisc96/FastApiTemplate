@@ -15,11 +15,19 @@ class FastApiRedisCacheImpSettings(BaseSettings):
         env_file = ENV_FILE
 
 
+class DBSettings(BaseSettings):
+    DB_URL: str
+
+    class Config:
+        case_sensitive = CASE_SENSITIVE
+        env_file = ENV_FILE
+
+
 class CelerySettings(BaseSettings):
     CELERY_BROKER_URL: str
     result_backend: str = Field(env="CELERY_RESULT_BACKEND")
     imports: list[str] = [
-        "backend.auctions.tasks",
+        "backend.users.tasks",
     ]
     CELERY_BROKER_TRANSPORT: str = "sqs"
     result_expires: int = 60 * 60 * 24  # 1 day
@@ -38,16 +46,7 @@ class LoggerSettings(BaseSettings):
     DATE_FORMAT: str = "%d-%b-%y %H:%M:%S"
 
 
-class AuctionsSettings(BaseSettings):
-    DB_URL: str
-
-    class Config:
-        case_sensitive = CASE_SENSITIVE
-        env_file = ENV_FILE
-
-
 class UsersSettings(BaseSettings):
-    DB_URL: str
     SECRET_KEY: str
     ALGORITHM: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int
@@ -59,7 +58,7 @@ class UsersSettings(BaseSettings):
 
 class Settings(BaseSettings):
     logger = LoggerSettings()
-    auctions = AuctionsSettings()
+    db = DBSettings()
     users = UsersSettings()
     celery = CelerySettings()
     cache = FastApiRedisCacheImpSettings()

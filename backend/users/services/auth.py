@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Callable
 from datetime import datetime, timedelta
 
 from jose import jwt
@@ -27,12 +27,12 @@ class AuthService:
         secret_key: str,
         algorithm: str,
         default_token_time_expiration: int,
-        users_repository,
+        get_user_by_filter: Callable,
     ) -> None:
         self._secret_key = secret_key
         self._algorithm = algorithm
         self._default_token_time_expiration = default_token_time_expiration
-        self._users_repository = users_repository
+        self._get_user_by_filter = get_user_by_filter
 
     def _decode_token_payload(self, *, token: str) -> dict[str, Any]:
         try:
@@ -41,7 +41,7 @@ class AuthService:
             raise TokenMalformed("Token malformed")
 
     def create_access_token(self, *, email, password, scopes) -> str:
-        user = self._users_repository.get_by_filter(filter_={'email': email})
+        user = self._get_user_by_filter(filter_={'email': email})
         if not user:
             raise UserDoesNotExist("User does not exists")
 
@@ -65,7 +65,7 @@ class AuthService:
         token_scopes = payload.get("scopes", [])
         token_data = TokenDataSerializer(scopes=token_scopes, username=username)
 
-        user = self._users_repository.get_by_filter(filter_={"email": token_data.username})
+        user = self._get_user_by_filter(filter_={"email": token_data.username})
         if not user:
             raise CredentialsIncorrect("Could not validate credentials")
 

@@ -1,12 +1,8 @@
 # Users
 curl 0.0.0.0:8000/v1/users/token -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "username=admin@gmail.com&password=admin&grant_type=&scope=&client_id=&client_secret=&scope=users:all"
 
-curl 0.0.0.0:8000/v1/users/me -H 'Content-type: application/json' -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJzY29wZXMiOlsidXNlcnM6YWxsIl0sImV4cCI6MTY4NzU5NDU2Mn0.O_wRD3SwTTF9ZWCwPd1oIONsAG3AsJqsqjxoZrRqklM"
+curl 0.0.0.0:8000/v1/users/me -H 'Content-type: application/json' -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJzY29wZXMiOlsidXNlcnM6YWxsIl0sImV4cCI6MTY4Nzk1NTU1MX0.Lg37yKuP_t3vbPDR77g327-9BCncoOA0bSfX89NMEtc"
 
 curl 0.0.0.0:8000/v1/users/1 -X POST -H 'Content-type: application/json' -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJzY29wZXMiOlsidXNlcnM6YWxsIl0sImV4cCI6MTY4NzU5NDU2Mn0.O_wRD3SwTTF9ZWCwPd1oIONsAG3AsJqsqjxoZrRqklM" -d '{"name": "test", "lastname": "test", "email": "test@gmail.com", "password": "test"}'
-
-# Auctions
-curl 0.0.0.0:8000/v1/auctions/1 -H 'Content-type: application/json'
-curl 0.0.0.0:8000/v1/auctions/1 -H 'Content-type: application/json' -X POST -d '{"title": "test", "starting_price": 10}'
 
 DELETE FROM users WHERE name='TestName';
