@@ -13,12 +13,14 @@ def client():
     yield TestClient(app=app, base_url="http://test")
 
 
-def test_create_a_valid_user(client):
+@pytest.fixture
+def token_admin(client):
     repository_mock = Mock(spec=SQLAlchemyUsersRepositoryImp)
+    email = "admin@gmail.com"
     repository_mock.get_by_filter.return_value = User(
         name="admin",
         lastname="admin",
-        email="admin@gmail.com",
+        email=email,
         hashed_password=encypt_password(password='admin'),
         active=True,
     )
@@ -37,27 +39,19 @@ def test_create_a_valid_user(client):
         )
 
     assert authentication_response.status_code == 200
-    repository_mock.get_by_filter.assert_called_once_with(filter_={'email': "admin@gmail.com"})
+    repository_mock.get_by_filter.assert_called_once_with(filter_={'email': email})
 
-    body = {
-        "name": "TestName",
-        "lastname": "TestLastname",
-        "email": "test@gmail.com",
-        "password": "TestPassword",
-    }
-    repository_mock.get_by_filter.return_value = User(
-        name="admin",
-        lastname="admin",
-        email="admin@gmail.com",
-        hashed_password=encypt_password(password='admin'),
-        active=True,
-    )
-    hashed_password = encypt_password(password='TestPassword')
+    return authentication_response.json()['access_token']
+
+
+def test_create_a_valid_user(token_admin, client):
+    repository_mock = Mock(spec=SQLAlchemyUsersRepositoryImp)
     repository_mock.add.return_value = User(
+        id=1,
         name="TestName",
         lastname="TestLastname",
         email="test@gmail.com",
-        hashed_password=hashed_password,
+        hashed_password=encypt_password(password='TestPassword'),
         active=True,
     )
     with app.container.users_repository.override(repository_mock):
@@ -65,15 +59,19 @@ def test_create_a_valid_user(client):
             url="/v1/users/1",
             headers={
                 "Content-Type": "application/json",
-                "Authorization": f"Bearer {authentication_response.json()['access_token']}",
+                "Authorization": f"Bearer {token_admin}",
             },
-            json=body,
+            json={
+                "name": "TestName",
+                "lastname": "TestLastname",
+                "email": "test@gmail.com",
+                "password": "TestPassword",
+            },
         )
 
-    assert users_response.status_code == 201
     repository_mock.add.assert_called_once()
 
-    assert 5 > 4
+    assert users_response.status_code == 201
     assert users_response.json() == {
         "name": "TestName",
         "lastname": "TestLastname",
