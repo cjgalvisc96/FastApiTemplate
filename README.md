@@ -15,6 +15,14 @@ poetry add black isort pytest coverage fastapi uvicorn[standard] pydantic
 ```sh
     [root_directory] make up
 ```
+## How to install from scratch?
+```sh
+    [root_directory] make install_from_scratch
+```
+## How to reboot the app?
+```sh
+    [root_directory] make reboot
+```
 ## How to run the tests?
 ```sh
     [root_directory] make tests
@@ -36,6 +44,9 @@ poetry add black isort pytest coverage fastapi uvicorn[standard] pydantic
 ```sh
     [root_directory] make db_sh
 ```
+```sh
+    [root_directory] make test_db_sh
+```
 
 ## How to down the app?
 ```sh
@@ -45,10 +56,4 @@ poetry add black isort pytest coverage fastapi uvicorn[standard] pydantic
 # TODO:
 
 Missing:
-    Use Factory pattern in tests.
-    Replace black by Ruff like a pylinter.
-
-DDD Version:
-    Add and inject Presenters services and selectors.
-
-Resolve TODOs
+    Resolve TODOs(Fix poetry dependencies)

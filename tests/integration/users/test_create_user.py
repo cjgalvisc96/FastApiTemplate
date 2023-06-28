@@ -4,7 +4,7 @@ from pytest_bdd import scenario
 FEAUTRE_NAME = "./create_user.feature"
 
 
-@pytest.mark.feature
+@pytest.mark.integration
 @scenario(
     feature_name=FEAUTRE_NAME,
     scenario_name="Create a valid user",

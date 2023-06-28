@@ -6,7 +6,6 @@ from backend.shared.sqlalchemy_repository import Base
 
 
 class User(Base):
-
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True)

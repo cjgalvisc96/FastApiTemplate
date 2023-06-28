@@ -26,8 +26,11 @@ class SQLAlchemyDatabase:
         )
 
     def create_database(self) -> None:
-        Base.metadata.create_all(self._engine)
+        Base.metadata.create_all(bind=self._engine)
         self.insert_default_records()
+
+    def clean_database(self) -> None:
+        Base.metadata.drop_all(bind=self._engine)
 
     def insert_default_records(self) -> None:
         from backend.users import User

@@ -17,6 +17,7 @@ class FastApiRedisCacheImpSettings(BaseSettings):
 
 class DBSettings(BaseSettings):
     DB_URL: str
+    TEST_DB_URL: str
 
     class Config:
         case_sensitive = CASE_SENSITIVE

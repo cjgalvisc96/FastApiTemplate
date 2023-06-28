@@ -1,7 +1,0 @@
-Uncle job learning:
-1. Don't use the structure name in the var name(ex: accountsList(bad) -> accounts(good)).
-2. Naming all(numbers alone, constants, etc..).
-3. Dont's use the prefix "I" in interfaces use the sufix "Imp" in the implementations(ex: Shape and ShapeImp).
-4. Class methods not have to be verbs.
-5. Funtion namees have to be verbs(isPosted, deletePage).
-6. Split elif blocks in separate functions.

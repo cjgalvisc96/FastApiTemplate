@@ -5,7 +5,6 @@ T = TypeVar('T')
 
 
 class NotFoundError(Exception):
-
     entity_name: str
 
     def __init__(self, entity_id):

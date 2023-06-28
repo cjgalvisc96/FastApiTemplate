@@ -1,19 +1,6 @@
-import logging
 from json import loads
 
-import pytest
-from fastapi.testclient import TestClient
 from pytest_bdd import then, given, parsers
-
-from backend.app import app
-
-logger = logging.getLogger(__name__)
-
-
-@pytest.fixture
-def client():
-    with TestClient(app=app, base_url="http://test") as client:
-        yield client
 
 
 @given(
@@ -21,19 +8,18 @@ def client():
         'I authenticate using the following credentials:\n{credentials:json}',
         extra_types=dict(json=loads),
     ),
-    target_fixture="http_request",
+    target_fixture="token_user",
 )
-def authenticate_user(client, credentials):
-    headers = {"Content-Type": "application/x-www-form-urlencoded"}
+def token_user(client, credentials):
+    http_request = client.post(
+        url="/v1/users/token",
+        headers={"Content-Type": "application/x-www-form-urlencoded"},
+        data={"grant_type": "", "client_id": "", "client_secret": ""} | credentials,
+    )
 
-    data = {"grant_type": "", "client_id": "", "client_secret": ""}
-    data.update(credentials)
+    assert http_request.status_code == 200
 
-    authenticate_endpoint = "/v1/users/token"
-
-    http_request = client.post(url=authenticate_endpoint, headers=headers, data=data)
-
-    return http_request
+    return http_request.json()['access_token']
 
 
 @given(
@@ -43,15 +29,15 @@ def authenticate_user(client, credentials):
     ),
     target_fixture="http_request",
 )
-def send_post_request(http_request, client, endpoint, body):
-    headers = {}
-    if http_request.status_code == 200:
-        headers = {
+def send_post_request(token_user, client, endpoint, body):
+    http_request = client.post(
+        url=endpoint,
+        headers={
             "Content-Type": "application/json",
-            "Authorization": f"Bearer {http_request.json()['access_token']}",
-        }
-
-    http_request = client.post(url=endpoint, headers=headers, json=body)
+            "Authorization": f"Bearer {token_user}",
+        },
+        json=body,
+    )
     return http_request
 
 

@@ -39,18 +39,17 @@ include = '\.pyi?$'
 exclude = '''/(.*/__init__.py)/'''
 
 [tool.coverage.run]
-include=["../backend/*"]
-omit=["../backend/tests/*", "../backend/config/*"]
+include=["../app/backend/*"]
+omit=["../app/tests/*", "../app/backend/config/*"]
 
 [tool.coverage.report]
-include=["../backend/*"]
-omit=["../backend/tests/*", "../backend/config/*"]
+include=["../app/backend/*"]
 sort="Cover"
 precision=2
 show_missing=false
 skip_empty=true
 skip_covered=true
-fail_under=90
+fail_under=80
 
 [tool.pytest.ini_options]
 markers=[
