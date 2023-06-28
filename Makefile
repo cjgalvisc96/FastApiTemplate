@@ -2,17 +2,17 @@ SHELL = /bin/sh
 DEVELOP_COMPOSE_FILE_PATH = "./docker/docker-compose.dev.yml"
 
 # 🐳 Docker Compose
-# up: CMD=up -d
 up: CMD=up
 down: CMD=down
 backend_sh: CMD=exec backend sh
 # test: CMD=exec backend poetry run pytest --disable-pytest-warnings --durations=0 -vv tests/integration
-# test: CMD=run --rm backend poetry run pytest --disable-pytest-warnings --durations=0 -vv tests/integration/users/test_create_user_using_override.py
-test: CMD=run --rm backend poetry run pytest --disable-pytest-warnings --durations=0 -vv tests/unit/users/
-db_sh: CMD=exec db mysql -u root --password=root app_database 
+test: CMD=run --rm backend poetry run pytest --disable-pytest-warnings --durations=0 -vv tests/integration/users/test_create_user_using_override.py
+# test: CMD=run --rm backend poetry run pytest --disable-pytest-warnings --durations=0 -vv tests/unit/users/
+db_sh: CMD=exec db mysql --user=root --password=root app_database 
+test_db_sh: CMD=exec db mysql --user=root --password=root test_app_database 
 logs: CMD=logs -f backend
 
-up down sh backend_sh db_sh logs test:
+up down sh backend_sh db_sh test_db_sh logs test:
 	docker-compose -f $(DEVELOP_COMPOSE_FILE_PATH) $(CMD)
 
 .PHONY: linter_apply

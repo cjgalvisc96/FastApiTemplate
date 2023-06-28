@@ -31,19 +31,19 @@ services:
       dockerfile: docker/db/dev.Dockerfile
     volumes:
       - mysql_data:/var/lib/mysql
-    restart: unless-stopped
+    restart: always
     environment:
-      # DATABASES: "app_database"
-      MYSQL_DATABASE: "app_database"
+      DATABASES: "app_database,test_app_database"
+      # MYSQL_DATABASE: "app_database"
       MYSQL_USER: "user"
       MYSQL_PASSWORD: "password"
       MYSQL_ROOT_PASSWORD: "root"
     ports:
       - "3306:3306"
     healthcheck:
-      test: "mysql --user=root --password=root --execute \"SHOW DATABASES;\""
-      interval: 5s
-      timeout: 10s
+      test: "mysql -u root --password=root app_database  --execute \"SHOW DATABASES;\""
+      interval: 2s
+      timeout: 20s
       retries: 5
     networks:
       - app_network
