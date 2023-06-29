@@ -1,14 +1,5 @@
 # FastApiTemplate
-Template to create MVC FastApi projects
-
-Create `Develop` branch
-
-```sh
-poetry add black isort pytest coverage fastapi uvicorn[standard] pydantic 
-```
-
-# Docs Template
-
+Template to create FastApi projects using dependency injection and repository pattern.
 ## How to install the app?
 **Prerequisites**: 
 [Docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/install/)

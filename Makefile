@@ -2,7 +2,7 @@ SHELL = /bin/sh
 DEVELOP_COMPOSE_FILE_PATH = "./docker/docker-compose.dev.yml"
 
 # 🐳 Docker Compose
-up: CMD=up
+up: CMD=up -d
 down: CMD=down
 backend_sh: CMD=exec backend sh
 db_sh: CMD=exec db mysql --user=root --password=root app_database 

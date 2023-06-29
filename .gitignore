@@ -198,6 +198,6 @@ pyrightconfig.json
 .python-version
 .vscode
 local.env
-dev.env
+# dev.env
 logs.txt
 docker/localstack_data

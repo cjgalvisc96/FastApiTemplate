@@ -11,20 +11,18 @@ on:
 
 jobs:
   build-lint-test:
-    # Temporary Skip
-    if: github.ref == 'refs/heads/develop'
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout repository 
         uses: actions/checkout@v3
 
-      # - name: Install docker-compose
-      #   uses: KengoTODA/actions-setup-docker-compose@v1
-      #   with:
-      #     version: '2.17.2'
+      - name: Install docker-compose
+        uses: KengoTODA/actions-setup-docker-compose@v1
+        with:
+          version: '2.17.2'
         
-      - uses: satackey/action-docker-layer-caching@v0.0.11
-        continue-on-error: true
+      # - uses: satackey/action-docker-layer-caching@v0.0.11
+      #   continue-on-error: true
 
       - name: Launch app 
         run: |
